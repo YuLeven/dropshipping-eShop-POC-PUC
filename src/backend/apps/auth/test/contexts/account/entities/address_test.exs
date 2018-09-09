@@ -1,7 +1,7 @@
 defmodule Auth.AddressTest do
   use Auth.DataCase
 
-  alias Auth.Account.Schemas.Address
+  alias Auth.Account.Address
 
   @valid_attrs %{
     city: "some city",

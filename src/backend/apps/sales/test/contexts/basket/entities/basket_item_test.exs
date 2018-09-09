@@ -1,7 +1,7 @@
-defmodule Sales.Basket.Schemas.BasketItemTest do
+defmodule Sales.Basket.BasketItemTest do
   use Sales.DataCase
 
-  alias Sales.Basket.Schemas.BasketItem
+  alias Sales.Basket.BasketItem
 
   @valid_attrs %{picture_url: "some picture_url", price: "120.5", product_id: "some product_id", product_name: "some product_name", quantity: 42}
   @invalid_attrs %{}

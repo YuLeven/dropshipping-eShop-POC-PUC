@@ -3,16 +3,8 @@ defmodule Sales.ProductTest do
 
   alias Sales.Product
   alias Sales.ProductRepo
-  alias Sales.Product.Schemas
+  alias Sales.Product.ProductEntity
   import Ecto.Query
-
-  @valid_attrs %{
-    description: "some description",
-    name: "some name",
-    picture_url: "some picture_url",
-    price: "some price"
-  }
-  @invalid_attrs %{}
 
   setup do
     Product.seed_fake_product_data(50)
@@ -28,7 +20,7 @@ defmodule Sales.ProductTest do
 
   describe "find_by_id/1" do
     test "retrieves a product by its id" do
-      product = ProductRepo.one(from(p in Schemas.Product, limit: 1))
+      product = ProductRepo.one(from(p in ProductEntity, limit: 1))
       assert Product.find_by_id(product.id) == product
     end
 
@@ -39,7 +31,7 @@ defmodule Sales.ProductTest do
 
   describe "find_by_name/1" do
     test "retrieves a product by its name" do
-      product = ProductRepo.one(from(p in Schemas.Product, limit: 1))
+      product = ProductRepo.one(from(p in ProductEntity, limit: 1))
       assert Product.find_by_name(product.name) == [product]
     end
 

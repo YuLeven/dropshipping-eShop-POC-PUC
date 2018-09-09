@@ -1,4 +1,4 @@
-defmodule Auth.Account.Schemas.Address do
+defmodule Auth.Account.Address do
   use Ecto.Schema
   import Ecto.Changeset
 

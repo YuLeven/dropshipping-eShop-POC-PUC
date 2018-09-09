@@ -1,5 +1,5 @@
 defmodule Auth.Account do
-  alias Auth.Account.Schemas.{User, Address, PaymentInfo}
+  alias Auth.Account.{User, Address, PaymentInfo}
 
   def create_account(%{name: name, surname: surname, email: email, password: password}) do
     # TODO: Implement

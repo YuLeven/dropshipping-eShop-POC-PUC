@@ -1,4 +1,4 @@
-defmodule Sales.Basket.Schemas.BasketItem do
+defmodule Sales.Basket.BasketItem do
   use Ecto.Schema
   import Ecto.Changeset
 
