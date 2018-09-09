@@ -7,18 +7,32 @@ services:
     environment:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
+    volumes:
+      - ./database/sales:/var/lib/postgresql/data
   
   products.data:
     image: postgres:10-alpine
     environment:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
+    volumes:
+      - ./database/products:/var/lib/postgresql/data
+
+  auth.data:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_USER=poc
+      - POSTGRES_PASSWORD=poc
+    volumes:
+      - ./database/auth:/var/lib/postgresql/data
   
   integration.data:
     image: postgres:10-alpine
     environment:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
+    volumes:
+      - ./database/integration:/var/lib/postgresql/data
   
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -29,31 +43,21 @@ services:
   redis:
     image: redis:alpine
   
-  sales:
+  web:
     build:
       context: .
-      dockerfile: ./src/backend/apps/sales/Dockerfile
+      dockerfile: ./src/backend/Dockerfile
     ports:
       - 4000:4000
-    volumes:
-      - ./src/backend/apps/sales:/app
-    depends_on:
-      - sales.data
-      - products.data
-      - rabbitmq
-  
-  integration:
-    build:
-      context: .
-      dockerfile: ./src/backend/apps/integration/Dockerfile
-    volumes:
-      - ./src/backend/apps/integration:/app
-    ports:
       - 4001:4000
+      - 4002:4000
+    volumes:
+      - ./src/backend:/app
     depends_on:
       - rabbitmq
+      - redis
       - mule
       - integration.data
-
-  
-
+      - sales.data
+      - auth.data
+      - products.data

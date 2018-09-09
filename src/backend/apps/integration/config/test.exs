@@ -12,8 +12,8 @@ config :logger, level: :warn
 # Configure your database
 config :integration, Integration.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "poc",
+  password: "poc",
   database: "integration_test",
-  hostname: "localhost",
+  hostname: "integration.data",
   pool: Ecto.Adapters.SQL.Sandbox

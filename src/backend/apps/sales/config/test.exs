@@ -12,8 +12,16 @@ config :logger, level: :warn
 # Configure your database
 config :sales, Sales.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "poc",
+  password: "poc",
   database: "sales_test",
-  hostname: "localhost",
+  hostname: "sales.data",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :sales, Sales.ProductRepo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "poc",
+  password: "poc",
+  database: "products_test",
+  hostname: "products.data",
+  pool_size: 10

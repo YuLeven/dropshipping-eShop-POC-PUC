@@ -39,8 +39,16 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :sales, Sales.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  username: "poc",
+  password: "poc",
   database: "sales_dev",
-  hostname: "localhost",
+  hostname: "sales.data",
+  pool_size: 10
+
+config :sales, Sales.ProductRepo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "poc",
+  password: "poc",
+  database: "products_dev",
+  hostname: "products.data",
   pool_size: 10

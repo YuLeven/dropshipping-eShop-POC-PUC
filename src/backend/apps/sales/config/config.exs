@@ -8,15 +8,14 @@ use Mix.Config
 # General application configuration
 config :sales,
   namespace: Sales,
-  ecto_repos: [Sales.Repo]
+  ecto_repos: [Sales.Repo, Sales.ProductRepo]
 
 # Configures the endpoint
 config :sales, SalesWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "ma8OVk4GMPNSWlULjfRdJkxN3VsQ/0QCS+c8rRkTmIpbdSnM23+9agy3IufBIBOB",
   render_errors: [view: SalesWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Sales.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Sales.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -25,4 +24,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
