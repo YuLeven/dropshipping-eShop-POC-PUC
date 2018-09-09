@@ -1,4 +1,4 @@
-defmodule Sales.Repo.Migrations.CreateProduct do
+defmodule Sales.ProductRepo.Migrations.CreateProduct do
   use Ecto.Migration
 
   def change do

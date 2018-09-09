@@ -24,4 +24,4 @@ config :sales, Sales.ProductRepo,
   password: "poc",
   database: "products_test",
   hostname: "products.data",
-  pool_size: 10
+  pool: Ecto.Adapters.SQL.Sandbox

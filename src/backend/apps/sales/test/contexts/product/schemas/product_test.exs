@@ -1,4 +1,4 @@
-defmodule Sales.ProductTest do
+defmodule Sales.Product.Schemas.ProductTest do
   use Sales.DataCase
 
   alias Sales.Product.Schemas.Product
@@ -7,7 +7,7 @@ defmodule Sales.ProductTest do
     description: "some description",
     name: "some name",
     picture_url: "some picture_url",
-    price: "some price"
+    price: 5.52
   }
   @invalid_attrs %{}
 
