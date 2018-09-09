@@ -3,7 +3,7 @@ defmodule Sales.Repo.Migrations.CreateBasket do
 
   def change do
     create table(:baskets) do
-      add(:buyer_id, :string)
+      add(:buyer_id, :integer)
       add(:payed, :boolean, default: false)
 
       timestamps()

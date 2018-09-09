@@ -3,7 +3,7 @@ defmodule Sales.Repo.Migrations.CreateBasketItem do
 
   def change do
     create table(:basket_itens) do
-      add :product_id, :string
+      add :product_id, :integer
       add :product_name, :string
       add :price, :decimal
       add :quantity, :integer

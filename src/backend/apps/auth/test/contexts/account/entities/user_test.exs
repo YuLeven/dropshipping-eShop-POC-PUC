@@ -1,7 +1,7 @@
-defmodule Auth.UserTest do
+defmodule Auth.Accounts.UserTest do
   use Auth.DataCase
 
-  alias Auth.Account.User
+  alias Auth.Accounts.User
 
   @valid_attrs %{
     email: "some email",

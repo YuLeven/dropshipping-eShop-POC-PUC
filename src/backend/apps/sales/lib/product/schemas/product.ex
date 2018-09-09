@@ -1,4 +1,4 @@
-defmodule Sales.Product.ProductEntity do
+defmodule Sales.Products.Product do
   use Ecto.Schema
   import Ecto.Changeset
 

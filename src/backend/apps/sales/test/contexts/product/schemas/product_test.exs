@@ -1,7 +1,7 @@
-defmodule Sales.Product.ProductEntityTest do
+defmodule Sales.ProductAggregate.ProductTest do
   use Sales.DataCase
 
-  alias Sales.Product.ProductEntity
+  alias Sales.Products.Product
 
   @valid_attrs %{
     description: "some description",
@@ -12,12 +12,12 @@ defmodule Sales.Product.ProductEntityTest do
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do
-    changeset = ProductEntity.changeset(%ProductEntity{}, @valid_attrs)
+    changeset = Product.changeset(%Product{}, @valid_attrs)
     assert changeset.valid?
   end
 
   test "changeset with invalid attributes" do
-    changeset = ProductEntity.changeset(%ProductEntity{}, @invalid_attrs)
+    changeset = Product.changeset(%Product{}, @invalid_attrs)
     refute changeset.valid?
   end
 end

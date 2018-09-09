@@ -1,7 +1,7 @@
-defmodule Auth.PaymentInfoTest do
+defmodule Auth.Accounts.PaymentInfoTest do
   use Auth.DataCase
 
-  alias Auth.Account.PaymentInfo
+  alias Auth.Accounts.PaymentInfo
 
   @valid_attrs %{
     card_brand: "some card_brand",

@@ -1,9 +1,16 @@
-defmodule Sales.Basket.BasketItemTest do
+defmodule Sales.Baskets.BasketItemTest do
   use Sales.DataCase
 
-  alias Sales.Basket.BasketItem
+  alias Sales.Baskets.BasketItem
 
-  @valid_attrs %{picture_url: "some picture_url", price: "120.5", product_id: "some product_id", product_name: "some product_name", quantity: 42}
+  @valid_attrs %{
+    picture_url: "some picture_url",
+    price: 120.5,
+    product_id: 1,
+    product_name: "some product_name",
+    quantity: 42,
+    basket_id: 1
+  }
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

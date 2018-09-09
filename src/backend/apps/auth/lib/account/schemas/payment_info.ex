@@ -1,4 +1,4 @@
-defmodule Auth.Account.PaymentInfo do
+defmodule Auth.Accounts.PaymentInfo do
   use Ecto.Schema
   import Ecto.Changeset
 
