@@ -10,8 +10,9 @@ defmodule Sales.Application do
     children = [
       # Start the Ecto repository
       supervisor(Sales.Repo, []),
+      supervisor(Sales.ProductRepo, []),
       # Start the endpoint when the application starts
-      supervisor(SalesWeb.Endpoint, []),
+      supervisor(SalesWeb.Endpoint, [])
       # Start your own worker by calling: Sales.Worker.start_link(arg1, arg2, arg3)
       # worker(Sales.Worker, [arg1, arg2, arg3]),
     ]

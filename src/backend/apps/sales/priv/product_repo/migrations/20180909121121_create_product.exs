@@ -3,10 +3,10 @@ defmodule Sales.Repo.Migrations.CreateProduct do
 
   def change do
     create table(:products) do
-      add :name, :string
-      add :price, :string
-      add :description, :string
-      add :picture_url, :string
+      add(:name, :string)
+      add(:price, :decimal)
+      add(:description, :string)
+      add(:picture_url, :string)
 
       timestamps()
     end

@@ -4,7 +4,7 @@ defmodule Sales.Product.Schemas.Product do
 
   schema "products" do
     field(:name, :string)
-    field(:price, :string)
+    field(:price, :decimal)
     field(:description, :string)
     field(:picture_url, :string)
 

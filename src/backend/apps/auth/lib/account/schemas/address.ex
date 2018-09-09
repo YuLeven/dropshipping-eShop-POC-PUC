@@ -10,7 +10,7 @@ defmodule Auth.Account.Schemas.Address do
     field(:city, :string)
     field(:state, :string)
     field(:postal_code, :string)
-    belongs_to(:user, Auth.User, foreign_key: :user_id)
+    belongs_to(:user, Auth.Account.Schemas.User, foreign_key: :user_id)
 
     timestamps()
   end

@@ -7,7 +7,7 @@ defmodule Auth.Account.Schemas.PaymentInfo do
     field(:card_holder_name, :string)
     field(:card_expiration, :string)
     field(:card_brand, :string)
-    belongs_to(:user, Auth.User, foreign_key: :user_id)
+    belongs_to(:user, Auth.Account.Schemas.User, foreign_key: :user_id)
 
     timestamps()
   end
