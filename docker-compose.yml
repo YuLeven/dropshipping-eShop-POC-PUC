@@ -1,0 +1,59 @@
+---
+version: '3.4'
+
+services:
+  sales.data:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_USER=poc
+      - POSTGRES_PASSWORD=poc
+  
+  products.data:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_USER=poc
+      - POSTGRES_PASSWORD=poc
+  
+  integration.data:
+    image: postgres:10-alpine
+    environment:
+      - POSTGRES_USER=poc
+      - POSTGRES_PASSWORD=poc
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+  
+  mule:
+    image: codingtony/mule
+
+  redis:
+    image: redis:alpine
+  
+  sales:
+    build:
+      context: .
+      dockerfile: ./src/backend/apps/sales/Dockerfile
+    ports:
+      - 4000:4000
+    volumes:
+      - ./src/backend/apps/sales:/app
+    depends_on:
+      - sales.data
+      - products.data
+      - rabbitmq
+  
+  integration:
+    build:
+      context: .
+      dockerfile: ./src/backend/apps/integration/Dockerfile
+    volumes:
+      - ./src/backend/apps/integration:/app
+    ports:
+      - 4001:4000
+    depends_on:
+      - rabbitmq
+      - mule
+      - integration.data
+
+  
+
