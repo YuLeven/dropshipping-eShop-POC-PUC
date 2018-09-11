@@ -30,7 +30,11 @@ defmodule Auth.Accounts do
   end
 
   def get_account(email) do
-    from(u in User, where: u.email == ^email, preload: [:shipping_addresses])
+    from(
+      u in User,
+      where: u.email == ^email,
+      preload: [:shipping_addresses, :payment_info_entries]
+    )
     |> Repo.one()
   end
 
@@ -44,11 +48,12 @@ defmodule Auth.Accounts do
   end
 
   def add_payment_info(%User{} = user, %PaymentInfo{} = payment_info) do
-    # TODO: Implement
+    PaymentInfo.changeset(payment_info, %{user_id: user.id})
+    |> Repo.insert!()
   end
 
   def remove_payment_info(%User{} = user, %PaymentInfo{} = payment_info) do
-    # TODO: Implement
+    payment_info |> Repo.delete!()
   end
 
   defp random_nonce do

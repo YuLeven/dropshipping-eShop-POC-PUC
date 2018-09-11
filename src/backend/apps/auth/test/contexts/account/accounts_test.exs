@@ -1,7 +1,7 @@
 defmodule Auth.AccountsTest do
   use Auth.DataCase, async: true
 
-  alias Auth.Accounts.{Address}
+  alias Auth.Accounts.{Address, PaymentInfo}
   alias Auth.Accounts
 
   @valid_account %{
@@ -36,10 +36,9 @@ defmodule Auth.AccountsTest do
       @valid_account
       |> Accounts.create_account!()
 
-      hashed_password = Bcrypt.hash_pwd_salt("password")
-
-      assert %{email: "foo@bar.com", hashed_password: hashed_password} =
-               Accounts.get_account("foo@bar.com")
+      new_account = Accounts.get_account("foo@bar.com")
+      assert %{email: "foo@bar.com"} = new_account
+      assert Bcrypt.verify_pass("password", new_account.hashed_password)
     end
 
     test "fails when email is already taken" do
@@ -74,12 +73,12 @@ defmodule Auth.AccountsTest do
 
   describe "add_shipping_address/2" do
     @shipping_address %Address{
-      street: Faker.Address.street_address(),
-      residence_number: Faker.Address.building_number(),
+      street: "Fake Street",
+      residence_number: "37",
       complement: "AP 12",
-      district: "Scaraborough",
-      city: Faker.Address.city(),
-      state: Faker.Address.state(),
+      district: "Centro",
+      city: "Caxambu",
+      state: "Minas Gerais",
       postal_code: "37440-000"
     }
 
@@ -88,17 +87,15 @@ defmodule Auth.AccountsTest do
 
       new_address = account |> Accounts.add_shipping_address(@shipping_address)
 
-      expected_address = %{
-        street: Faker.Address.street_address(),
-        residence_number: Faker.Address.building_number(),
-        complement: "AP 12",
-        district: "Scaraborough",
-        city: Faker.Address.city(),
-        state: Faker.Address.state(),
-        postal_code: "37440-000"
-      }
-
-      assert expected_address = new_address
+      assert %Address{
+               street: "Fake Street",
+               residence_number: "37",
+               complement: "AP 12",
+               district: "Centro",
+               city: "Caxambu",
+               state: "Minas Gerais",
+               postal_code: "37440-000"
+             } = new_address
 
       assert new_address.id != nil
     end
@@ -117,6 +114,46 @@ defmodule Auth.AccountsTest do
       account = Accounts.get_account("foo@bar.com")
 
       assert [] = account.shipping_addresses
+    end
+  end
+
+  describe "add_payment_info/2" do
+    @valid_payment_info %PaymentInfo{
+      card_number: "4547568497853654",
+      card_holder_name: "John Doe",
+      card_expiration: "12/22",
+      card_brand: "VISA"
+    }
+
+    test "adds a new payment info to an account" do
+      account = @valid_account |> Accounts.create_account!()
+
+      payment_info = account |> Accounts.add_payment_info(@valid_payment_info)
+
+      assert %PaymentInfo{
+               card_number: "4547568497853654",
+               card_holder_name: "John Doe",
+               card_expiration: "12/22",
+               card_brand: "VISA"
+             } = payment_info
+
+      assert payment_info.id != nil
+    end
+  end
+
+  describe "remove_payment_info/2" do
+    test "remove a payment info entry" do
+      account =
+        @valid_account
+        |> Accounts.create_account!()
+
+      payment_info = account |> Accounts.add_payment_info(@valid_payment_info)
+
+      account |> Accounts.remove_payment_info(payment_info)
+
+      account = Accounts.get_account("foo@bar.com")
+
+      assert [] = account.payment_info_entries
     end
   end
 end

@@ -1,7 +1,7 @@
 defmodule Auth.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Auth.Accounts.Address
+  alias Auth.Accounts.{Address, PaymentInfo}
 
   schema "users" do
     field(:email, :string)
@@ -9,6 +9,7 @@ defmodule Auth.Accounts.User do
     field(:surname, :string)
     field(:hashed_password, :string)
     has_many(:shipping_addresses, Address)
+    has_many(:payment_info_entries, PaymentInfo)
 
     timestamps()
   end
