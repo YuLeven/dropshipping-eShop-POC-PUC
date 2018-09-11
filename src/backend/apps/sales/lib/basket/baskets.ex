@@ -22,7 +22,10 @@ defmodule Sales.Baskets do
         |> Repo.insert()
 
       basket_item ->
-        BasketItem.changeset(basket_item, basket |> increase_item_count(basket_item, product))
+        BasketItem.changeset(
+          basket_item,
+          basket_item |> increase_item_count(product)
+        )
         |> Repo.update()
     end
 
@@ -38,7 +41,10 @@ defmodule Sales.Baskets do
         if basket_item.quantity == 1 do
           Repo.delete(basket_item)
         else
-          BasketItem.changeset(basket_item, basket |> decrease_item_count(basket_item, product))
+          BasketItem.changeset(
+            basket_item,
+            basket_item |> decrease_item_count(product)
+          )
           |> Repo.update()
         end
     end
@@ -85,14 +91,15 @@ defmodule Sales.Baskets do
       basket.basket_itens
       |> Enum.reduce(Decimal.new(0), &basket_total_price/2)
 
-    case Payments.process_payment(credit_card_data,
+    case Payments.process_payment(
+           credit_card_data,
            invoice_total: invoice_total |> Decimal.to_float()
          ) do
       {:ok, payment_info} ->
         %Order{
           buyer_id: buyer_id,
           delivery_address_id: address_id,
-          invoice_total: invoice_total,
+          invoice_total: payment_info.invoice_total,
           basket_id: basket.id
         }
         |> Orders.place_order()
@@ -110,8 +117,7 @@ defmodule Sales.Baskets do
     |> Repo.one()
   end
 
-  defp change_item_count(
-         %Basket{} = basket,
+  defp calculate_with_new_count(
          %BasketItem{} = basket_item,
          %Product{} = product,
          amount_to_change
@@ -122,13 +128,13 @@ defmodule Sales.Baskets do
     }
   end
 
-  defp decrease_item_count(%Basket{} = basket, %BasketItem{} = item, %Product{} = product) do
-    basket
-    |> change_item_count(item, product, -1)
+  defp decrease_item_count(%BasketItem{} = item, %Product{} = product) do
+    item
+    |> calculate_with_new_count(product, -1)
   end
 
-  defp increase_item_count(%Basket{} = basket, %BasketItem{} = item, %Product{} = product) do
-    basket
-    |> change_item_count(item, product, 1)
+  defp increase_item_count(%BasketItem{} = item, %Product{} = product) do
+    item
+    |> calculate_with_new_count(product, 1)
   end
 end
