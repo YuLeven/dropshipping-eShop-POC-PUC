@@ -17,10 +17,8 @@ defmodule Sales.PaymentsTest do
     end
 
     test "it processes the payment -- expects fake data" do
-      invoice_total = 15.98
-      fake_data = %{payment_auth_code: "foo_bar_12_bar", invoice_total: 15.98}
-
-      assert {:ok, fake_data} = Payments.process_payment(@fake_credit_card, invoice_total: 15.98)
+      assert {:ok, result} = Payments.process_payment(@fake_credit_card, invoice_total: 15.98)
+      assert %{payment_auth_code: "foo_bar_12_bar", invoice_total: 15.98} = result
     end
   end
 end

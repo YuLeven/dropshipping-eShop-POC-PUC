@@ -32,8 +32,12 @@ defmodule Sales.BasketsTest do
         product_name: product.name
       }
 
-      basket_item = Baskets.cast_basket!(user_id: 1).basket_itens |> Enum.at(0)
-      assert expected_basket_item = basket_item
+      basket_item =
+        Baskets.cast_basket!(user_id: 1).basket_itens
+        |> Enum.at(0)
+        |> Map.from_struct()
+
+      assert Enum.all?(expected_basket_item, &(&1 in basket_item))
     end
 
     test "creates many products on existing basket" do
@@ -45,18 +49,15 @@ defmodule Sales.BasketsTest do
       |> Baskets.add_product(product_a)
       |> Baskets.add_product(product_b)
 
-      expected_itens = [
-        %{product_id: product_a.id, price: product_a.price, quantity: 1},
-        %{product_id: product_b.id, price: product_b.price, quantity: 1}
-      ]
-
       basket_itens = Baskets.cast_basket!(user_id: 1).basket_itens
-      basket_item_a = basket_itens |> Enum.at(0)
-      basket_item_b = basket_itens |> Enum.at(1)
+      basket_item_a = basket_itens |> Enum.at(0) |> Map.from_struct()
+      basket_item_b = basket_itens |> Enum.at(1) |> Map.from_struct()
+      product_a = product_a |> Map.from_struct()
+      product_b = product_b |> Map.from_struct()
 
       assert basket_itens |> Enum.count() == 2
-      assert basket_item_a = product_a
-      assert basket_item_b = product_b
+      Enum.all?(basket_item_a, &(&1 in product_a))
+      Enum.all?(basket_item_b, &(&1 in product_b))
     end
 
     test "increases product quantity when already in basket" do
@@ -66,15 +67,11 @@ defmodule Sales.BasketsTest do
       |> Baskets.add_product(product)
       |> Baskets.add_product(product)
 
-      expected_basket_item = %{
-        product_id: product.id,
-        price: Decimal.mult(product.price, Decimal.new(2)),
-        quantity: 2,
-        product_name: product.name
-      }
-
       basket_item = Baskets.cast_basket!(user_id: 1).basket_itens |> Enum.at(0)
-      assert expected_basket_item = basket_item
+      assert basket_item.product_id == product.id
+      assert basket_item.price == Decimal.mult(product.price, Decimal.new(2))
+      assert basket_item.quantity == 2
+      assert basket_item.product_name == product.name
     end
   end
 
@@ -100,15 +97,15 @@ defmodule Sales.BasketsTest do
 
       basket_item = basket.basket_itens |> Enum.at(0)
       assert basket.basket_itens |> Enum.count() == 1
-      expected_basket_item = %{quantity: 2, price: Decimal.mult(product.price, Decimal.new(2))}
-      assert expected_basket_item = basket_item
+      assert basket_item.price == Decimal.mult(product.price, Decimal.new(2))
+      assert basket_item.quantity == 2
 
       basket = basket |> Baskets.remove_product(product)
       basket_item = basket.basket_itens |> Enum.at(0)
 
       assert basket.basket_itens |> Enum.count() == 1
-      expected_basket_item = %{quantity: 2, price: Decimal.mult(product.price, Decimal.new(2))}
-      assert expected_basket_item = basket_item
+      assert basket_item.price == Decimal.mult(product.price, Decimal.new(1))
+      assert basket_item.quantity == 1
     end
   end
 
@@ -155,13 +152,8 @@ defmodule Sales.BasketsTest do
         from(o in Order, where: o.basket_id == ^basket.id)
         |> Repo.one()
 
-      basket_id = basket.id
-
-      assert %{
-               basket_id: basket_id,
-               buyer_id: 1,
-               delivery_address_id: 1
-             } = placed_order
+      assert %{buyer_id: 1, delivery_address_id: 1} = placed_order
+      assert placed_order.basket_id == basket.id
     end
 
     test "raises if a basket with no itens is provided for checkout" do
