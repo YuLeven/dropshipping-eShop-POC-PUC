@@ -3,10 +3,11 @@ defmodule Sales.Baskets.Basket do
   import Ecto.Changeset
   alias Sales.Baskets.BasketItem
 
+  @derive {Poison.Encoder, only: [:buyer_id, :payed, :basket_itens]}
   schema "baskets" do
-    field :buyer_id, :integer
-    field :payed, :boolean
-    has_many :basket_itens, BasketItem
+    field(:buyer_id, :integer)
+    field(:payed, :boolean)
+    has_many(:basket_itens, BasketItem)
 
     timestamps()
   end

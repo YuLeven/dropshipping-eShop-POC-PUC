@@ -24,7 +24,7 @@ defmodule Sales.Mixfile do
   def application do
     [
       mod: {Sales.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :amqp]
     ]
   end
 
@@ -43,7 +43,10 @@ defmodule Sales.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:faker, "~> 0.10"}
+      {:faker, "~> 0.10"},
+      {:amqp, "~> 0.3.1"},
+      {:poison, "~> 3.0"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 

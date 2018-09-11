@@ -40,11 +40,15 @@ services:
     environment:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
+    depends_on:
+      - rabbitmq
     volumes:
       - integration.data:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    ports:
+      - 15672:15672
 
   mule:
     image: codingtony/mule

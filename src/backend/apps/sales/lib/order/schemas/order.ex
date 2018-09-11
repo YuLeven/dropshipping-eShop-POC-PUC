@@ -3,6 +3,7 @@ defmodule Sales.Orders.Order do
   import Ecto.Changeset
   alias Sales.Baskets.Basket
 
+  @derive {Poison.Encoder, only: [:buyer_id, :delivery_address_id, :invoice_total, :basket]}
   schema "orders" do
     field(:buyer_id, :integer)
     field(:delivery_address_id, :integer)
