@@ -1,5 +1,14 @@
----
-version: '3.4'
+version: "3.4"
+
+volumes:
+  sales.data:
+    driver: local
+  products.data:
+    driver: local
+  auth.data:
+    driver: local
+  integration.data:
+    driver: local
 
 services:
   sales.data:
@@ -8,15 +17,15 @@ services:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
     volumes:
-      - ./database/sales:/var/lib/postgresql/data
-  
+      - sales.data:/var/lib/postgresql/data
+
   products.data:
     image: postgres:10-alpine
     environment:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
     volumes:
-      - ./database/products:/var/lib/postgresql/data
+      - products.data:/var/lib/postgresql/data
 
   auth.data:
     image: postgres:10-alpine
@@ -24,19 +33,19 @@ services:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
     volumes:
-      - ./database/auth:/var/lib/postgresql/data
-  
+      - auth.data:/var/lib/postgresql/data
+
   integration.data:
     image: postgres:10-alpine
     environment:
       - POSTGRES_USER=poc
       - POSTGRES_PASSWORD=poc
     volumes:
-      - ./database/integration:/var/lib/postgresql/data
-  
+      - integration.data:/var/lib/postgresql/data
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
-  
+
   mule:
     image: codingtony/mule
     depends_on:
@@ -51,22 +60,48 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 5050:5050
-  
-  web:
+
+  auth:
     build:
-      context: .
-      dockerfile: ./src/backend/Dockerfile
+      context: ./src/backend
+      dockerfile: ./Dockerfile
+    command: ./entrypoint.sh
+    environment:
+      - APP_DIR=apps/auth
     ports:
       - 4000:4000
+    volumes:
+      - ./src/backend:/app
+    depends_on:
+      - auth.data
+  sales:
+    build:
+      context: ./src/backend
+      dockerfile: ./Dockerfile
+    command: ./entrypoint.sh
+    environment:
+      - APP_DIR=apps/sales
+    ports:
       - 4001:4000
+    volumes:
+      - ./src/backend:/app
+    depends_on:
+      - sales.data
+      - products.data
+      - rabbitmq
+      - redis
+      - mule
+  integration:
+    build:
+      context: ./src/backend
+      dockerfile: ./Dockerfile
+    command: ./entrypoint.sh
+    environment:
+      - APP_DIR=apps/integration
+    ports:
       - 4002:4000
     volumes:
       - ./src/backend:/app
     depends_on:
-      - rabbitmq
-      - redis
-      - mule
       - integration.data
-      - sales.data
-      - auth.data
-      - products.data
+      - mule
