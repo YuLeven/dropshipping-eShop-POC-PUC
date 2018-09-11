@@ -3,6 +3,8 @@ defmodule Auth.Accounts do
   alias Auth.Repo
   import Ecto.Query
 
+  @secret_key Application.get_env(:auth, AuthWeb.Endpoint)[:secret_key_base]
+
   def create_account!(%{name: name, surname: surname, email: email, password: password}) do
     User.changeset(%User{}, %{
       name: name,
@@ -66,7 +68,7 @@ defmodule Auth.Accounts do
         iat: Time.utc_now(),
         email: user.email
       },
-      %{key: "gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr9C"}
+      %{key: @secret_key}
     )
   end
 end

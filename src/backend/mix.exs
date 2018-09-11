@@ -15,6 +15,6 @@ defmodule DropshippingEshop.MixProject do
   #
   # Run "mix help deps" for examples and options.
   defp deps do
-    [{:faker, "~> 0.10"}]
+    []
   end
 end
