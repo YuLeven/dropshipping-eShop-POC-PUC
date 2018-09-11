@@ -39,9 +39,18 @@ services:
   
   mule:
     image: codingtony/mule
+    depends_on:
+      - supplier-ws
 
   redis:
     image: redis:alpine
+
+  supplier-ws:
+    build:
+      context: ./src/FakeSupplierLegacyWS
+      dockerfile: ./Dockerfile
+    ports:
+      - 5050:5050
   
   web:
     build:
