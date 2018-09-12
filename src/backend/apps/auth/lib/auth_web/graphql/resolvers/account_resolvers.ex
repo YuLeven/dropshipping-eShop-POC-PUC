@@ -4,7 +4,7 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
 
   @user_not_found_exception {:error, "Informed user could not be found."}
 
-  def get_account(_, %{email: email}, _) do
+  def get_account(_, _, %{context: %{current_user_email: email}}) do
     case Accounts.get_account(email) do
       nil ->
         {:error, "User with email #{email} not found."}
@@ -14,24 +14,28 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
     end
   end
 
-  def add_shipping_address(_, %{email: email, address: address}, _) do
+  def add_shipping_address(_, %{address: address}, %{context: %{current_user_email: email}}) do
     Accounts.get_account(email)
     |> add_shipping_address(address)
   end
 
-  def remove_shipping_address(_, %{email: email, address_id: address_id}, _) do
+  def remove_shipping_address(_, %{address_id: address_id}, %{
+        context: %{current_user_email: email}
+      }) do
     user = Accounts.get_account(email)
     address = user.shipping_addresses |> Enum.find(fn ad -> ad.id == address_id end)
 
     user |> remove_shipping_address(address)
   end
 
-  def add_payment_info(_, %{email: email, payment_info: payment_info}, _) do
+  def add_payment_info(_, %{payment_info: payment_info}, %{context: %{current_user_email: email}}) do
     Accounts.get_account(email)
     |> add_payment_info(payment_info)
   end
 
-  def remove_payment_info(_, %{email: email, payment_info_id: payment_info_id}, _) do
+  def remove_payment_info(_, %{payment_info_id: payment_info_id}, %{
+        context: %{current_user_email: email}
+      }) do
     user = Accounts.get_account(email)
     payment_info = user.payment_info_entries |> Enum.find(fn pi -> pi.id == payment_info_id end)
 
@@ -66,24 +70,27 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
   defp add_shipping_address(%User{} = user, address) do
     user |> Accounts.add_shipping_address(struct(Address, address))
 
-    {:ok, Accounts.get_account(user.email)}
+    {:ok, user_addresses(user.email)}
   end
 
   defp add_payment_info(%User{} = user, payment_info) do
     user |> Accounts.add_payment_info(struct(PaymentInfo, payment_info))
 
-    {:ok, Accounts.get_account(user.email)}
+    {:ok, user_payment_info_entries(user.email)}
   end
 
   defp remove_shipping_address(%User{} = user, address) do
     user |> Accounts.remove_shipping_address(address)
 
-    {:ok, Accounts.get_account(user.email)}
+    {:ok, user_addresses(user.email)}
   end
 
   defp remove_payment_info(%User{} = user, payment_info) do
     user |> Accounts.remove_payment_info(payment_info)
 
-    {:ok, Accounts.get_account(user.email)}
+    {:ok, user_payment_info_entries(user.email)}
   end
+
+  defp user_addresses(email), do: Accounts.get_account(email).shipping_addresses
+  defp user_payment_info_entries(email), do: Accounts.get_account(email).payment_info_entries
 end

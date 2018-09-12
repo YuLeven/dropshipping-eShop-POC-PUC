@@ -2,6 +2,7 @@ defmodule AuthWeb.GraphQL.Schema.AccountTypes do
   use Absinthe.Schema.Notation
   alias Auth.Accounts
   alias AuthWeb.GraphQL.Resolvers
+  alias AuthWeb.GraphQL.Middleware.Authentication
 
   object :login_response do
     field(:token, :string)
@@ -25,9 +26,8 @@ defmodule AuthWeb.GraphQL.Schema.AccountTypes do
   end
 
   object :account_queries do
-    field :user, :user do
-      arg(:email, non_null(:string))
-
+    field :me, :user do
+      middleware(Authentication)
       resolve(&Resolvers.Account.get_account/3)
     end
 

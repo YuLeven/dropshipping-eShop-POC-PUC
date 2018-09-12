@@ -2,6 +2,7 @@ defmodule AuthWeb.GraphQL.Schema.AddressTypes do
   use Absinthe.Schema.Notation
   alias AuthWeb.GraphQL.Resolvers
   alias AuthWeb.GraphQL.Schema
+  alias AuthWeb.GraphQL.Middleware.Authentication
 
   input_object :new_shipping_address do
     field(:street, non_null(:string))
@@ -25,15 +26,15 @@ defmodule AuthWeb.GraphQL.Schema.AddressTypes do
   end
 
   object :addresses_mutations do
-    field :add_shipping_address, type: :user do
-      arg(:email, non_null(:string))
+    field :add_shipping_address, type: list_of(:shipping_address) do
+      middleware(Authentication)
       arg(:address, non_null(:new_shipping_address))
 
       resolve(&Resolvers.Account.add_shipping_address/3)
     end
 
-    field :remove_shipping_address, type: :user do
-      arg(:email, non_null(:string))
+    field :remove_shipping_address, type: list_of(:shipping_address) do
+      middleware(Authentication)
       arg(:address_id, non_null(:integer))
 
       resolve(&Resolvers.Account.remove_shipping_address/3)

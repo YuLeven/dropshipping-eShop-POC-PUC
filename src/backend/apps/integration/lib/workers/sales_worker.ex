@@ -4,6 +4,7 @@ defmodule Integration.SalesWorker do
   alias Integration.Rabbitmq
 
   @queue "order_placements"
+  @mule_base_url "http://mule:8081/"
 
   def start_link do
     GenServer.start_link(__MODULE__, [])
@@ -33,4 +34,12 @@ defmodule Integration.SalesWorker do
   end
 
   defp dispatch_purchase_notification({:error, error}), do: IO.inspect(error)
+
+  defp fetch_provider_endpoint(provider_id) do
+    # TODO: In an actual system, implement a model to store provider data
+    case provider_id do
+      1 -> "integration"
+      2 -> "provider_b"
+    end
+  end
 end

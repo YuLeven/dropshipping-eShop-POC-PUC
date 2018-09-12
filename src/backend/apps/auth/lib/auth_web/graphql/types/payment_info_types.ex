@@ -2,6 +2,7 @@ defmodule AuthWeb.GraphQL.Schema.PaymentInfoTypes do
   use Absinthe.Schema.Notation
   alias AuthWeb.GraphQL.Resolvers
   alias AuthWeb.GraphQL.Schema
+  alias AuthWeb.GraphQL.Middleware.Authentication
 
   input_object :new_payment_info do
     field(:card_number, non_null(:string))
@@ -19,15 +20,15 @@ defmodule AuthWeb.GraphQL.Schema.PaymentInfoTypes do
   end
 
   object :payment_info_types do
-    field :add_payment_info, type: :user do
-      arg(:email, non_null(:string))
+    field :add_payment_info, type: list_of(:payment_info) do
+      middleware(Authentication)
       arg(:payment_info, non_null(:new_payment_info))
 
       resolve(&Resolvers.Account.add_payment_info/3)
     end
 
-    field :remove_payment_info, type: :user do
-      arg(:email, non_null(:string))
+    field :remove_payment_info, type: list_of(:payment_info) do
+      middleware(Authentication)
       arg(:payment_info_id, non_null(:integer))
 
       resolve(&Resolvers.Account.remove_payment_info/3)
