@@ -22,7 +22,7 @@ defmodule Auth.Accounts do
 
       account ->
         if password |> Bcrypt.verify_pass(account.hashed_password) do
-          {:ok, issue_token(account)}
+          {:ok, issue_token(account), account}
         else
           {:error, "Wrong password"}
         end

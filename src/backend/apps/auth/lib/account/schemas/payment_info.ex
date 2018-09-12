@@ -7,7 +7,7 @@ defmodule Auth.Accounts.PaymentInfo do
     field(:card_holder_name, :string)
     field(:card_expiration, :string)
     field(:card_brand, :string)
-    belongs_to(:user, Auth.Account.User, foreign_key: :user_id)
+    belongs_to(:user, Auth.Accounts.User, foreign_key: :user_id)
 
     timestamps()
   end
@@ -17,7 +17,13 @@ defmodule Auth.Accounts.PaymentInfo do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:card_number, :card_holder_name, :card_expiration, :card_brand])
-    |> validate_required([:card_number, :card_holder_name, :card_expiration, :card_brand])
+    |> cast(params, [:card_number, :card_holder_name, :card_expiration, :card_brand, :user_id])
+    |> validate_required([
+      :card_number,
+      :card_holder_name,
+      :card_expiration,
+      :card_brand,
+      :user_id
+    ])
   end
 end

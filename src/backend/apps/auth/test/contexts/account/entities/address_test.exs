@@ -8,9 +8,10 @@ defmodule Auth.Accounts.AddressTest do
     complement: "some complement",
     district: "some district",
     postal_code: "some postal_code",
-    residence_number: "some residence_number",
+    residence_number: 212,
     state: "some state",
-    street: "some street"
+    street: "some street",
+    user_id: 1
   }
   @invalid_attrs %{}
 

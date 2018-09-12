@@ -74,7 +74,7 @@ defmodule Auth.AccountsTest do
   describe "add_shipping_address/2" do
     @shipping_address %Address{
       street: "Fake Street",
-      residence_number: "37",
+      residence_number: 37,
       complement: "AP 12",
       district: "Centro",
       city: "Caxambu",
@@ -89,7 +89,7 @@ defmodule Auth.AccountsTest do
 
       assert %Address{
                street: "Fake Street",
-               residence_number: "37",
+               residence_number: 37,
                complement: "AP 12",
                district: "Centro",
                city: "Caxambu",

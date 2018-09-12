@@ -4,13 +4,13 @@ defmodule Auth.Accounts.Address do
 
   schema "addresses" do
     field(:street, :string)
-    field(:residence_number, :string)
+    field(:residence_number, :integer)
     field(:complement, :string)
     field(:district, :string)
     field(:city, :string)
     field(:state, :string)
     field(:postal_code, :string)
-    belongs_to(:user, Auth.Account.Schemas.User, foreign_key: :user_id)
+    belongs_to(:user, Auth.Account.User, foreign_key: :user_id)
 
     timestamps()
   end
@@ -27,7 +27,8 @@ defmodule Auth.Accounts.Address do
       :district,
       :city,
       :state,
-      :postal_code
+      :postal_code,
+      :user_id
     ])
     |> validate_required([
       :street,
@@ -36,7 +37,8 @@ defmodule Auth.Accounts.Address do
       :district,
       :city,
       :state,
-      :postal_code
+      :postal_code,
+      :user_id
     ])
   end
 end

@@ -7,7 +7,8 @@ defmodule Auth.Accounts.PaymentInfoTest do
     card_brand: "some card_brand",
     card_expiration: "some card_expiration",
     card_holder_name: "some card_holder_name",
-    card_number: "some card_number"
+    card_number: "some card_number",
+    user_id: 1
   }
   @invalid_attrs %{}
 
