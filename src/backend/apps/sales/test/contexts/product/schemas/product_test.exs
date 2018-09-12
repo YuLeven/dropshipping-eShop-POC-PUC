@@ -7,7 +7,8 @@ defmodule Sales.ProductAggregate.ProductTest do
     description: "some description",
     name: "some name",
     picture_url: "some picture_url",
-    price: 5.52
+    price: 5.52,
+    provider_id: 1
   }
   @invalid_attrs %{}
 

@@ -7,6 +7,7 @@ defmodule Sales.ProductRepo.Migrations.CreateProduct do
       add(:price, :decimal)
       add(:description, :string)
       add(:picture_url, :string)
+      add(:provider_id, :integer)
 
       timestamps()
     end

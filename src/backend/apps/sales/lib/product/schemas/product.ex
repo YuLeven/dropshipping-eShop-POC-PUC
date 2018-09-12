@@ -7,6 +7,7 @@ defmodule Sales.Products.Product do
     field(:price, :decimal)
     field(:description, :string)
     field(:picture_url, :string)
+    field(:provider_id, :integer)
 
     timestamps()
   end
@@ -16,7 +17,7 @@ defmodule Sales.Products.Product do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :price, :description, :picture_url])
-    |> validate_required([:name, :price, :description, :picture_url])
+    |> cast(params, [:name, :price, :description, :picture_url, :provider_id])
+    |> validate_required([:name, :price, :description, :picture_url, :provider_id])
   end
 end

@@ -11,7 +11,8 @@ defmodule Sales.Products do
         name: Faker.Commerce.product_name(),
         price: Faker.Commerce.price(),
         description: Faker.Lorem.Shakespeare.hamlet(),
-        picture_url: Faker.Avatar.image_url()
+        picture_url: Faker.Avatar.image_url(),
+        provider_id: 1
       }
 
       ProductRepo.insert!(product)
