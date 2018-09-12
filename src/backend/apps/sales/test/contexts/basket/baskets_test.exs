@@ -41,23 +41,24 @@ defmodule Sales.BasketsTest do
     end
 
     test "creates many products on existing basket" do
-      products = Products.list_all() |> Enum.slice(0, 2)
-      product_a = products |> Enum.at(0)
-      product_b = products |> Enum.at(1)
+      [product_a, product_b | _] = Products.list_all()
 
       Baskets.cast_basket!(user_id: 1)
       |> Baskets.add_product(product_a)
       |> Baskets.add_product(product_b)
 
       basket_itens = Baskets.cast_basket!(user_id: 1).basket_itens
-      basket_item_a = basket_itens |> Enum.at(0) |> Map.from_struct()
-      basket_item_b = basket_itens |> Enum.at(1) |> Map.from_struct()
-      product_a = product_a |> Map.from_struct()
-      product_b = product_b |> Map.from_struct()
+      [basket_item_a, basket_item_b | _] = basket_itens
+
+      assert basket_itens
+             |> Enum.all?(fn item ->
+               [product_a, product_b]
+               |> Enum.any?(fn product ->
+                 product.id == item.product_id
+               end)
+             end)
 
       assert basket_itens |> Enum.count() == 2
-      Enum.all?(basket_item_a, &(&1 in product_a))
-      Enum.all?(basket_item_b, &(&1 in product_b))
     end
 
     test "increases product quantity when already in basket" do

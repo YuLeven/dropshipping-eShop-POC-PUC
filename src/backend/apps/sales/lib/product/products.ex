@@ -24,10 +24,10 @@ defmodule Sales.Products do
   end
 
   def find_by_id(id) do
-    ProductRepo.one(from p in Product, where: p.id == ^id)
+    ProductRepo.one(from(p in Product, where: p.id == ^id))
   end
 
   def find_by_name(name) do
-    ProductRepo.all(from p in Product, where: p.name == ^name)
+    ProductRepo.all(from(p in Product, where: like(p.name, ^"%#{name}%")))
   end
 end

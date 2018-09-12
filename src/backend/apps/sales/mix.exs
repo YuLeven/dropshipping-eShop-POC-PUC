@@ -46,7 +46,9 @@ defmodule Sales.Mixfile do
       {:faker, "~> 0.10"},
       {:amqp, "~> 0.3.1"},
       {:poison, "~> 3.0"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:absinthe_plug, "~> 1.4"},
+      {:json_web_token, "~> 0.2.5"}
     ]
   end
 

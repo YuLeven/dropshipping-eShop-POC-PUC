@@ -13,7 +13,7 @@ config :sales,
 # Configures the endpoint
 config :sales, SalesWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "ma8OVk4GMPNSWlULjfRdJkxN3VsQ/0QCS+c8rRkTmIpbdSnM23+9agy3IufBIBOB",
+  secret_key_base: "1NpByXgL1xm7lM6UW913CQvyW4Hazh7UQX4iVwU1VeiQb7S98C/+8sLMgLIX48q5",
   render_errors: [view: SalesWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: Sales.PubSub, adapter: Phoenix.PubSub.PG2]
 
