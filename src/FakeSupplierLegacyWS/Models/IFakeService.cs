@@ -7,6 +7,6 @@ namespace Models
   public interface IFakeService
   {
     [OperationContract]
-    string SellItem(SellItemInput input);
+    SellItemResponse SellItem(SellItemInput input);
   }
 }

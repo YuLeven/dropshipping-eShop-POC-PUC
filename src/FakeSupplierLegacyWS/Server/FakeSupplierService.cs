@@ -9,9 +9,15 @@ namespace Server
   public class FakeSupplierService : IFakeService
   {
 
-    public string SellItem(SellItemInput input)
+    public SellItemResponse SellItem(SellItemInput input)
     {
-      return "Aknowledged";
+      return new SellItemResponse
+      {
+        ProductName = "Some Product",
+        DeliveryETAInDays = 12,
+        Price = 10.99f,
+        PurchaseDate = DateTime.Now
+      };
     }
   }
 }
