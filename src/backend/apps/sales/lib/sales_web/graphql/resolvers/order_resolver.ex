@@ -1,5 +1,6 @@
 defmodule SalesWeb.GraphQL.Resolvers.Order do
   alias Sales.Orders
+  alias Sales.Products
 
   def list_orders(_, _, %{context: %{current_user_id: current_user_id}}) do
     {:ok, Orders.list_orders(user_id: current_user_id)}

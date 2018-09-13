@@ -5,7 +5,15 @@ defmodule Sales.Baskets.BasketItem do
 
   # Several of product's traits are duplicated beucase in production
   # product actually belongs to another application.
-  @derive {Poison.Encoder, only: [:product_id, :product_name, :price, :quantity, :picture_url]}
+  @derive {Poison.Encoder,
+           only: [
+             :product_id,
+             :product_name,
+             :product_provider_id,
+             :price,
+             :quantity,
+             :picture_url
+           ]}
   schema "basket_itens" do
     field(:product_id, :integer)
     field(:product_name, :string)

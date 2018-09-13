@@ -12,7 +12,8 @@ defmodule Sales.Application do
       supervisor(Sales.Repo, []),
       supervisor(Sales.ProductRepo, []),
       # Start the endpoint when the application starts
-      supervisor(SalesWeb.Endpoint, [])
+      supervisor(SalesWeb.Endpoint, []),
+      worker(Sales.ProductsFakeDataProvider, [], restart: :temporary)
       # Start your own worker by calling: Sales.Worker.start_link(arg1, arg2, arg3)
       # worker(Sales.Worker, [arg1, arg2, arg3]),
     ]
@@ -28,5 +29,21 @@ defmodule Sales.Application do
   def config_change(changed, _new, removed) do
     SalesWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+end
+
+defmodule Sales.ProductsFakeDataProvider do
+  use GenServer
+  alias Sales.Products
+  require Logger
+
+  def start_link do
+    GenServer.start_link(__MODULE__, [])
+  end
+
+  def init(_args) do
+    Logger.info("Seeding fake product data")
+    Products.seed_fake_product_data(50)
+    {:ok, nil}
   end
 end
