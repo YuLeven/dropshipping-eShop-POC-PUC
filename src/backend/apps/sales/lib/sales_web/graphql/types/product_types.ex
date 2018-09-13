@@ -3,6 +3,7 @@ defmodule SalesWeb.GraphQL.Schema.ProductTypes do
   alias SalesWeb.GraphQL.Resolvers
 
   object :product do
+    field(:id, :integer)
     field(:name, :string)
     field(:price, :float)
     field(:description, :string)

@@ -12,10 +12,6 @@ defmodule SalesWeb.GraphQL.Schema.OrderTypes do
     field(:basket, :basket)
   end
 
-  object :basket do
-    field(:id, :integer)
-  end
-
   object :order_queries do
     field :orders, list_of(:order) do
       middleware(Authentication)

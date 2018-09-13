@@ -91,10 +91,11 @@ defmodule Sales.Baskets do
       basket.basket_itens
       |> Enum.reduce(Decimal.new(0), &basket_total_price/2)
 
-    case Payments.process_payment(
-           credit_card_data,
-           invoice_total: invoice_total |> Decimal.to_float()
-         ) do
+    Payments.process_payment(
+      credit_card_data,
+      invoice_total: invoice_total |> Decimal.to_float()
+    )
+    |> case do
       {:ok, payment_info} ->
         %Order{
           buyer_id: buyer_id,
@@ -104,9 +105,17 @@ defmodule Sales.Baskets do
         }
         |> Orders.place_order()
 
+        basket |> mark_basket_as_payed
+        get_basket(basket.id)
+
       {:error, error} ->
         {:error, error}
     end
+  end
+
+  def get_basket(id) do
+    from(b in Basket, where: b.id == ^id, preload: [:basket_itens])
+    |> Repo.one!()
   end
 
   defp basket_total_price(%BasketItem{} = basket_item, accumulator),
@@ -115,6 +124,11 @@ defmodule Sales.Baskets do
   defp find_basket_item(%Basket{} = basket, %{id: product_id}) do
     from(bi in BasketItem, where: bi.basket_id == ^basket.id and bi.product_id == ^product_id)
     |> Repo.one()
+  end
+
+  defp mark_basket_as_payed(%Basket{} = basket) do
+    Basket.changeset(basket, %{payed: true})
+    |> Repo.update!()
   end
 
   defp calculate_with_new_count(
