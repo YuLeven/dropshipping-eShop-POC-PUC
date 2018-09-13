@@ -1,9 +1,18 @@
 defmodule Integration.Rabbitmq do
   @rabbit_conn_string "amqp://guest:guest@rabbitmq"
+  require Logger
 
-  def establish_connection! do
-    {:ok, connection} = AMQP.Connection.open(@rabbit_conn_string)
-    connection
+  def establish_connection!(attempts \\ 0) do
+    AMQP.Connection.open(@rabbit_conn_string)
+    |> case do
+      {:ok, connection} ->
+        connection
+
+      {:error, _} ->
+        Logger.info("Failed to establish rabbitMQ connection. Retrying...")
+        Process.sleep(1000)
+        establish_connection!(attempts + 1)
+    end
   end
 
   def open_channel!(connection) do
