@@ -14,6 +14,7 @@ defmodule Sales.Baskets do
         BasketItem.changeset(%BasketItem{}, %{
           product_id: product.id,
           product_name: product.name,
+          product_provider_id: product.provider_id,
           quantity: 1,
           price: product.price,
           picture_url: product.picture_url,

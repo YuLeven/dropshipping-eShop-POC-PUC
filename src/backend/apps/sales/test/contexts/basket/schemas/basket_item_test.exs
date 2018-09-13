@@ -9,7 +9,8 @@ defmodule Sales.Baskets.BasketItemTest do
     product_id: 1,
     product_name: "some product_name",
     quantity: 42,
-    basket_id: 1
+    basket_id: 1,
+    product_provider_id: 1
   }
   @invalid_attrs %{}
 
