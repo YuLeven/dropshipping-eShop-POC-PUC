@@ -4,7 +4,6 @@ defmodule Sales.OrdersTest do
   alias Sales.Orders
   alias Sales.Orders.Order
   alias Sales.Baskets
-  import Ecto.Query
 
   describe "place_order/1" do
     test "persists and enqueues order" do

@@ -53,7 +53,8 @@ defmodule Auth.AccountsTest do
     test "signs in a user" do
       @valid_account |> Accounts.create_account!()
 
-      assert {:ok, _} = Accounts.authenticate(email: "foo@bar.com", password: "password")
+      assert {:ok, token, user} =
+               Accounts.authenticate(email: "foo@bar.com", password: "password")
     end
 
     test "fails when password is invalid" do

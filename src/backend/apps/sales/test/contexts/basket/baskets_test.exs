@@ -48,7 +48,6 @@ defmodule Sales.BasketsTest do
       |> Baskets.add_product(product_b)
 
       basket_itens = Baskets.cast_basket!(user_id: 1).basket_itens
-      [basket_item_a, basket_item_b | _] = basket_itens
 
       assert basket_itens
              |> Enum.all?(fn item ->
