@@ -115,6 +115,16 @@ services:
       - integration.data
       - mule
 
+  client:
+    build:
+      context: ./src/frontend/client
+    command: npm start
+    volumes:
+      - ./src/frontend/client/:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:3000"
+
   maintenance:
     build:
       context: ./src/backend
