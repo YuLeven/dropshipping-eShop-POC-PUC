@@ -78,6 +78,7 @@ services:
       - 4000:4000
     volumes:
       - ./src/backend:/app
+      - /app/deps
     depends_on:
       - auth.data
 
@@ -92,6 +93,7 @@ services:
       - 4001:4000
     volumes:
       - ./src/backend:/app
+      - /app/deps
     depends_on:
       - rabbitmq
       - sales.data
@@ -110,6 +112,7 @@ services:
       - 4002:4000
     volumes:
       - ./src/backend:/app
+      - /app/deps
     depends_on:
       - rabbitmq
       - integration.data
