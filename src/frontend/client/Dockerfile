@@ -2,12 +2,10 @@ FROM node:9.4.0
 
 WORKDIR /usr/app
 
-COPY package*.json ./
-
-RUN npm install -qy
-
 COPY . .
+
+RUN yarn install
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
