@@ -95,9 +95,9 @@ services:
     volumes:
       - ./src/backend:/app
     depends_on:
+      - rabbitmq
       - sales.data
       - products.data
-      - rabbitmq
       - redis
       - mule
 
