@@ -1,7 +1,6 @@
 defmodule AuthWeb.GraphQL.Schema.PaymentInfoTypes do
   use Absinthe.Schema.Notation
   alias AuthWeb.GraphQL.Resolvers
-  alias AuthWeb.GraphQL.Schema
   alias AuthWeb.GraphQL.Middleware.Authentication
 
   input_object :new_payment_info do

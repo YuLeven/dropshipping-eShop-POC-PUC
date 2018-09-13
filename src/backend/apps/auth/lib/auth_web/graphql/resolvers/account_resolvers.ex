@@ -44,8 +44,7 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
 
   def new_account(_, %{account: new_account}, _) do
     try do
-      account = Accounts.create_account!(new_account)
-      {:ok, account}
+      {:ok, Accounts.get_account(new_account.email)}
     rescue
       Ecto.InvalidChangesetError -> {:error, "Please verify the input data."}
     end
@@ -62,10 +61,6 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
   end
 
   defp add_shipping_address(nil, _), do: @user_not_found_exception
-  defp remove_shipping_address(nil, _), do: @user_not_found_exception
-  defp remove_shipping_address(_, nil), do: {:error, "Informed address could not be found"}
-  defp remove_payment_info(_, nil), do: {:error, "Informed payment info could not be found"}
-  defp add_payment_info(nil, _), do: @user_not_found_exception
 
   defp add_shipping_address(%User{} = user, address) do
     user |> Accounts.add_shipping_address(struct(Address, address))
@@ -73,17 +68,24 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
     {:ok, user_addresses(user.email)}
   end
 
+  defp add_payment_info(nil, _), do: @user_not_found_exception
+
   defp add_payment_info(%User{} = user, payment_info) do
     user |> Accounts.add_payment_info(struct(PaymentInfo, payment_info))
 
     {:ok, user_payment_info_entries(user.email)}
   end
 
+  defp remove_shipping_address(nil, _), do: @user_not_found_exception
+  defp remove_shipping_address(_, nil), do: {:error, "Informed address could not be found"}
+
   defp remove_shipping_address(%User{} = user, address) do
     user |> Accounts.remove_shipping_address(address)
 
     {:ok, user_addresses(user.email)}
   end
+
+  defp remove_payment_info(_, nil), do: {:error, "Informed payment info could not be found"}
 
   defp remove_payment_info(%User{} = user, payment_info) do
     user |> Accounts.remove_payment_info(payment_info)

@@ -7,6 +7,7 @@ defmodule Sales.Payments do
 
   def process_payment(%CreditCard{} = cc_data, invoice_total: invoice_total) do
     fake_payment_data = %{
+      customer: cc_data.card_holder_name,
       invoice_total: invoice_total,
       payment_auth_code: "foo_bar_12_bar"
     }

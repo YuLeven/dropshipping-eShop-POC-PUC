@@ -1,7 +1,6 @@
 defmodule AuthWeb.GraphQL.Schema.AddressTypes do
   use Absinthe.Schema.Notation
   alias AuthWeb.GraphQL.Resolvers
-  alias AuthWeb.GraphQL.Schema
   alias AuthWeb.GraphQL.Middleware.Authentication
 
   input_object :new_shipping_address do

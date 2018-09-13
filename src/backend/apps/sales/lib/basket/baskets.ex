@@ -76,7 +76,7 @@ defmodule Sales.Baskets do
     basket |> Repo.delete!()
   end
 
-  def checkout!(%Basket{basket_itens: []} = basket, _, _),
+  def checkout!(%Basket{basket_itens: []}, _, _),
     do: raise(ArgumentError, message: "A basket must contain itens before checking out.")
 
   def checkout!(%Basket{payed: true}, _, _),

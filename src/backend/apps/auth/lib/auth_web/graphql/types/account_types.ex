@@ -1,6 +1,5 @@
 defmodule AuthWeb.GraphQL.Schema.AccountTypes do
   use Absinthe.Schema.Notation
-  alias Auth.Accounts
   alias AuthWeb.GraphQL.Resolvers
   alias AuthWeb.GraphQL.Middleware.Authentication
 

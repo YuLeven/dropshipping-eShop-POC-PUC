@@ -4,13 +4,12 @@ defmodule SalesWeb.Auth do
   @secret_key Application.get_env(:auth, AuthWeb.Endpoint)[:secret_key_base]
 
   import Plug.Conn
-  import Ecto.Query
 
   def init(opts), do: opts
 
   def call(conn, _) do
     context = conn |> handle_auth
-    context = Absinthe.Plug.put_options(conn, context: context)
+    Absinthe.Plug.put_options(conn, context: context)
   end
 
   defp handle_auth(conn) do
@@ -35,7 +34,7 @@ defmodule SalesWeb.Auth do
       {:ok, claims} ->
         %{current_user_id: claims.sub, current_user_email: claims.email}
 
-      {:error, error} ->
+      {:error, _} ->
         {:error, "Invalid authorization token"}
     end
   end

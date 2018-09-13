@@ -5,11 +5,6 @@ defmodule Sales.ProductsTests do
   alias Sales.Products
   import Ecto.Query
 
-  setup do
-    Products.seed_fake_product_data(50)
-    :ok
-  end
-
   describe "list_all/0" do
     test "lists all products" do
       retrieved_products = Products.list_all()
