@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import gql from 'graphql-tag';
 import authClient from '../clients/auth-client';
 import { isUserLogged } from "../utils/user";
+import { Link } from 'react-router-dom';
 
 const LOGIN_QUERY = gql`
 query Login($email: String!, $password: String!) {
@@ -74,6 +75,7 @@ class Login extends Component {
               <label htmlFor="inputPassword" className="sr-only">Password</label>
               <input ref={node => { passwordInput = node }} type="password" id="inputPassword" className="form-control" placeholder="Password" required={true} />
               <button className="btn btn-lg btn-primary btn-block mt-3" type="submit">Sign in</button>
+              <Link to="/sign-up" className="btn btn-lg btn-block btn-primary">Register</Link>
             </form>
           </div>
         </div>

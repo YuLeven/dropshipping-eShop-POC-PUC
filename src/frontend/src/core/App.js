@@ -6,6 +6,8 @@ import { ApolloProvider } from 'react-apollo';
 import client from '../clients/sales-client';
 import ProductGrid from '../product-grid';
 import Login from '../login';
+import Register from '../register';
+import Checkout from '../checkout';
 
 class App extends Component {
   render() {
@@ -17,6 +19,8 @@ class App extends Component {
             <div className="container">
               <Route exact path="/" component={ProductGrid} />
               <Route path="/login" component={Login} />
+              <Route path="/sign-up" component={Register} />
+              <Route path="/checkout" component={Checkout} />
             </div>
           </div>
         </Router>

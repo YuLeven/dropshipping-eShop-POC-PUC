@@ -30,9 +30,8 @@ mutation CancelBasket($id: Int!) {
 class Basket extends Component {
 
   itensCount = (itens) => itens.map(item => item.quantity).reduce(((a, b) => a + b), 0);
+
   basketTotal = (itens) => formatMoney(itens.map(item => parseFloat(item.price)).reduce(((a, b) => a + b), 0));
-
-
 
   render() {
     return isUserLogged() ?
