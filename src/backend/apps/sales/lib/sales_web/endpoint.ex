@@ -18,6 +18,8 @@ defmodule SalesWeb.Endpoint do
 
   plug(SalesWeb.Router)
 
+  plug(CORSPlug)
+
   @doc """
   Callback invoked for dynamically configuring the endpoint.
 

@@ -4,6 +4,7 @@ defmodule AuthWeb.Router do
   pipeline :api do
     plug(:accepts, ["json"])
     plug(AuthWeb.Auth)
+    plug(CORSPlug, origin: "*")
   end
 
   scope "/api" do

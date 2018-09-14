@@ -48,7 +48,8 @@ defmodule Sales.Mixfile do
       {:poison, "~> 3.0"},
       {:mock, "~> 0.3.0", only: :test},
       {:absinthe_plug, "~> 1.4"},
-      {:json_web_token, "~> 0.2.5"}
+      {:json_web_token, "~> 0.2.5"},
+      {:cors_plug, "~> 1.5"}
     ]
   end
 

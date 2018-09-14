@@ -46,7 +46,8 @@ defmodule Auth.Mixfile do
       {:bcrypt_elixir, "~> 1.0"},
       {:json_web_token, "~> 0.2.5"},
       {:faker, "~> 0.10"},
-      {:absinthe_plug, "~> 1.4"}
+      {:absinthe_plug, "~> 1.4"},
+      {:cors_plug, "~> 1.5"}
     ]
   end
 

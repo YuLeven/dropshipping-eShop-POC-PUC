@@ -4,6 +4,7 @@ defmodule SalesWeb.Router do
   pipeline :api do
     plug(:accepts, ["json"])
     plug(SalesWeb.Auth)
+    plug(CORSPlug, origin: "*")
   end
 
   scope "/api" do
