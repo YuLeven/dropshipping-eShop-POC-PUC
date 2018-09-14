@@ -18,8 +18,6 @@ defmodule AuthWeb.Endpoint do
 
   plug(AuthWeb.Router)
 
-  plug(CORSPlug)
-
   @doc """
   Callback invoked for dynamically configuring the endpoint.
 

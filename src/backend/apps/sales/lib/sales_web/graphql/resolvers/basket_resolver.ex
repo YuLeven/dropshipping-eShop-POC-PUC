@@ -8,12 +8,17 @@ defmodule SalesWeb.GraphQL.Resolvers.Basket do
   end
 
   def add_product(_, %{product_id: product_id}, %{context: %{current_user_id: user_id}}) do
-    product = Products.find_by_id(product_id)
+    Products.find_by_id(product_id)
+    |> case do
+      nil ->
+        {:error, "The provided product does not exist."}
 
-    Baskets.cast_basket!(user_id: user_id)
-    |> Baskets.add_product(product)
+      product ->
+        Baskets.cast_basket!(user_id: user_id)
+        |> Baskets.add_product(product)
 
-    {:ok, Baskets.cast_basket!(user_id: user_id)}
+        {:ok, Baskets.cast_basket!(user_id: user_id)}
+    end
   end
 
   def remove_product(_, %{product_id: product_id}, %{context: %{current_user_id: user_id}}) do
