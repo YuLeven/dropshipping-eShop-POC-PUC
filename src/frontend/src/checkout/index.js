@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import gql from "graphql-tag";
 import { Mutation } from 'react-apollo';
-import { isUserLogged } from '../utils/user';
 
 const CREATE_ACCOUNT_MUTATION = gql`
 mutation CreatAccount($email: String!, $name: String!, $surname: String!, $password: String) {

@@ -49,7 +49,7 @@ class Register extends Component {
               <div className="row h-100 justify-content-center align-items-center">
                 <div className="col-md-8 order-md-1">
                   <h4 className="mb-3">New Account</h4>
-                  {(this.state.creationFailed || error && error.message) ?
+                  {(this.state.creationFailed || (error && error.message)) ?
                     <div className="alert alert-danger alert-dismissible fade show" role="alert">
                       {this.state.creationFailureMessage || error.message}
                       <button type="button" className="close" data-dismiss="alert" aria-label="Close">
