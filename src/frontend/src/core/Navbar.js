@@ -26,7 +26,7 @@ const LoginButton = () => {
               </a>
 
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a className="dropdown-item" href="#">Logout</a>
+                <a className="dropdown-item">Logout</a>
               </div>
             </div>
           )
