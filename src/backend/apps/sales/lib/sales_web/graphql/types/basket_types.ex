@@ -6,7 +6,7 @@ defmodule SalesWeb.GraphQL.Schema.BasketTypes do
   object :basket do
     field(:id, :integer)
     field(:buyer_id, :integer)
-    field(:payed, :boolean)
+    field(:status, :string)
     field(:basket_itens, list_of(:basket_item))
   end
 
@@ -57,6 +57,13 @@ defmodule SalesWeb.GraphQL.Schema.BasketTypes do
       arg(:address_id, non_null(:integer))
 
       resolve(&Resolvers.Basket.checkout/3)
+    end
+
+    field :cancel_basket, :basket do
+      middleware(Authentication)
+      arg(:id, non_null(:integer))
+
+      resolve(&Resolvers.Basket.cancel_basket/3)
     end
   end
 end

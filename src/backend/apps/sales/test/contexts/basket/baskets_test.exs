@@ -111,19 +111,19 @@ defmodule Sales.BasketsTest do
 
   describe "cast_basket!/1" do
     test "creates a new basket when none unpayed exists for the current user" do
-      [%Basket{buyer_id: 1, payed: false}, %Basket{buyer_id: 2, payed: true}]
+      [%Basket{buyer_id: 1, status: "active"}, %Basket{buyer_id: 2, status: "payed"}]
       |> Enum.each(&Repo.insert!/1)
 
       new_basket = Baskets.cast_basket!(user_id: 2)
-      assert %Basket{buyer_id: 2, payed: false} = new_basket
+      assert %Basket{buyer_id: 2, status: "active"} = new_basket
     end
 
     test "retrieves the user current basket if there's an unpayed available" do
-      [%Basket{buyer_id: 1, payed: false}, %Basket{buyer_id: 1, payed: true}]
+      [%Basket{buyer_id: 1, status: "active"}, %Basket{buyer_id: 1, status: "payed"}]
       |> Enum.each(&Repo.insert!/1)
 
       retrieved_basket = Baskets.cast_basket!(user_id: 1)
-      assert %Basket{buyer_id: 1, payed: false} = retrieved_basket
+      assert %Basket{buyer_id: 1, status: "active"} = retrieved_basket
     end
   end
 
@@ -134,7 +134,7 @@ defmodule Sales.BasketsTest do
 
       deleted_basket = from(b in Basket, where: b.id == ^basket.id) |> Repo.one()
 
-      assert deleted_basket == nil
+      assert %{status: "cancelled"} = deleted_basket
     end
   end
 
@@ -168,7 +168,7 @@ defmodule Sales.BasketsTest do
 
         Baskets.cast_basket!(user_id: 1)
         |> Baskets.add_product(product)
-        |> Basket.changeset(%{payed: true})
+        |> Basket.changeset(%{status: "payed"})
         |> Repo.update!()
         |> Baskets.checkout!(nil, nil)
       end

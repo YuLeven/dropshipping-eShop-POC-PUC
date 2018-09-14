@@ -44,6 +44,7 @@ defmodule AuthWeb.GraphQL.Resolvers.Account do
 
   def new_account(_, %{account: new_account}, _) do
     try do
+      Accounts.create_account!(new_account)
       {:ok, Accounts.get_account(new_account.email)}
     rescue
       Ecto.InvalidChangesetError -> {:error, "Please verify the input data."}

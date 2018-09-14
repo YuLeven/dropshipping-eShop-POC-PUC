@@ -3,7 +3,7 @@ defmodule Sales.Basket.BasketTest do
 
   alias Sales.Baskets.Basket
 
-  @valid_attrs %{buyer_id: 1, payed: false}
+  @valid_attrs %{buyer_id: 1, status: "active"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

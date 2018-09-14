@@ -3,10 +3,10 @@ defmodule Sales.Baskets.Basket do
   import Ecto.Changeset
   alias Sales.Baskets.BasketItem
 
-  @derive {Poison.Encoder, only: [:buyer_id, :payed, :basket_itens]}
+  @derive {Poison.Encoder, only: [:buyer_id, :status, :basket_itens]}
   schema "baskets" do
     field(:buyer_id, :integer)
-    field(:payed, :boolean)
+    field(:status, :string)
     has_many(:basket_itens, BasketItem)
 
     timestamps()
@@ -17,7 +17,7 @@ defmodule Sales.Baskets.Basket do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:buyer_id, :payed])
-    |> validate_required([:buyer_id, :payed])
+    |> cast(params, [:buyer_id, :status])
+    |> validate_required([:buyer_id, :status])
   end
 end

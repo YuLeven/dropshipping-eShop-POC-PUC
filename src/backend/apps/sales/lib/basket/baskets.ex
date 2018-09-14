@@ -57,13 +57,13 @@ defmodule Sales.Baskets do
     basket_query =
       from(
         b in Basket,
-        where: b.buyer_id == ^user_id and b.payed == ^false,
+        where: b.buyer_id == ^user_id and b.status == ^"active",
         preload: [:basket_itens]
       )
 
     case Repo.one(basket_query) do
       nil ->
-        %Basket{buyer_id: user_id, payed: false}
+        %Basket{buyer_id: user_id, status: "active"}
         |> Repo.insert!()
         |> Repo.preload(:basket_itens)
 
@@ -73,13 +73,14 @@ defmodule Sales.Baskets do
   end
 
   def destroy_basket(%Basket{} = basket) do
-    basket |> Repo.delete!()
+    Basket.changeset(basket, %{status: "cancelled"})
+    |> Repo.update()
   end
 
   def checkout!(%Basket{basket_itens: []}, _, _),
     do: raise(ArgumentError, message: "A basket must contain itens before checking out.")
 
-  def checkout!(%Basket{payed: true}, _, _),
+  def checkout!(%Basket{status: "payed"}, _, _),
     do: raise(ArgumentError, message: "This basket has already been payed for.")
 
   def checkout!(
@@ -128,7 +129,7 @@ defmodule Sales.Baskets do
   end
 
   defp mark_basket_as_payed(%Basket{} = basket) do
-    Basket.changeset(basket, %{payed: true})
+    Basket.changeset(basket, %{status: "payed"})
     |> Repo.update!()
   end
 

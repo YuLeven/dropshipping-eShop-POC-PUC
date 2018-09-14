@@ -5,7 +5,7 @@ const headers = () => {
   return token ? { authorization: `Bearer ${token}` } : {}
 }
 
-const authClient = new ApolloClient({
+const salesClient = new ApolloClient({
   uri: 'http://localhost:4001/api',
   fetchOptions: {
     credentials: 'include'
@@ -17,4 +17,4 @@ const authClient = new ApolloClient({
   }
 });
 
-export default authClient;
+export default salesClient;

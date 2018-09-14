@@ -47,4 +47,16 @@ defmodule SalesWeb.GraphQL.Resolvers.Basket do
       error -> {:error, error.message}
     end
   end
+
+  def cancel_basket(_, %{id: basket_id}, %{context: %{current_user_id: user_id}}) do
+    Baskets.get_basket(basket_id)
+    |> Baskets.destroy_basket()
+    |> case do
+      {:ok, basket} ->
+        {:ok, basket}
+
+      {:error, error} ->
+        {:error, "Could not cancel basket."}
+    end
+  end
 end
