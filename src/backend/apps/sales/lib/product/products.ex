@@ -6,12 +6,14 @@ defmodule Sales.Products do
   def seed_fake_product_data(total_to_seed) do
     Faker.start()
 
+    ProductRepo.delete_all(Product)
+
     for i <- 0..total_to_seed, i > 0 do
       product = %Product{
         name: Faker.Commerce.product_name(),
         price: Faker.Commerce.price(),
         description: Faker.Lorem.Shakespeare.hamlet(),
-        picture_url: Faker.Avatar.image_url(),
+        picture_url: Faker.Avatar.image_url(225, 100),
         provider_id: 1
       }
 
