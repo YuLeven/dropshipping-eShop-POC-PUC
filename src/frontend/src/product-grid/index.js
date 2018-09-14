@@ -20,7 +20,6 @@ class ProductGrid extends Component {
   render() {
     return (
       <div>
-        <h2>Home</h2>
         <Query query={productsQuery}>
           {({ loading, error, data }) => {
             if (loading) return "Loading...";
