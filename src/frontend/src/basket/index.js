@@ -44,6 +44,7 @@ class Basket extends Component {
               {({ loading, error, data }) => {
                 if (loading) return "Loading...";
                 if (error) return null;
+                if (!data.basket.basketItens.length) return null;
 
                 return (
                   <div className="btn-group">
@@ -62,7 +63,6 @@ class Basket extends Component {
                         <div className="text-center">
                           <div className="btn-group">
                             <Link to="/checkout" className="btn btn-primary">Checkout</Link>
-
                             <button
                               className="btn btn-secondary"
                               onClick={
