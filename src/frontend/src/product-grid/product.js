@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { formatMoney } from '../utils/money';
 import { isUserLogged } from '../utils/user';
 
+const $ = window.$;
 class Product extends Component {
 
   handleAddToCart = () => {
@@ -14,11 +15,12 @@ class Product extends Component {
       refetchQueries: [
         { query: this.props.refetchQuery }
       ]
-    })
+    });
+
+    $(`#product-${this.props.product.id}-success`).modal('show');
   }
 
   render() {
-
     let { product } = this.props;
 
     return (
@@ -34,15 +36,27 @@ class Product extends Component {
                 onClick={this.handleAddToCart}
               >
                 Add to cart
-              </button>
+                </button>
             </div>
           </div>
           <hr />
           <h6 className="d-flex justify-content-center">{product.name}</h6>
           <h3 className="d-flex justify-content-center">{formatMoney(product.price)}</h3>
         </div>
+        <div className="modal" id={`product-${product.id}-success`} tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-body">
+                <p>Added <b>{product.name}</b> to shopping basket.</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    )
+    );
   }
 }
 
