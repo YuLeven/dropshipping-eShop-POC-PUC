@@ -1,227 +1,222 @@
-import React, { Component } from "react";
-import gql from "graphql-tag";
-import { Mutation } from 'react-apollo';
+import React, { Component } from 'react';
+import gql from 'graphql-tag';
+import { Query, Mutation } from 'react-apollo';
+import ProductOverview from './product-overview';
+import authClient from '../clients/auth-client';
+import { Link } from 'react-router-dom';
+import { formatCCValue } from '../utils/money';
 
-const CREATE_ACCOUNT_MUTATION = gql`
-mutation CreatAccount($email: String!, $name: String!, $surname: String!, $password: String) {
-  createAccount(account: {
-    email: $email
-    name: $name
-    surname: $surname
-    password: $password
-  }) {
-    email
+const SHOPPING_BASKET = gql`
+{
+  basket {
+    id
+    basketItens {
+      id
+      productName
+      
+      quantity
+      price
+    }
   }
 }
 `;
 
+const ACCOUNT_QUERY = gql`
+{
+  me {
+    paymentInfoEntries {
+      id
+      cardBrand
+      cardExpiration
+      cardHolderName
+      cardNumber
+    }
+    shippingAddresses {
+      id
+      city
+      complement
+      district
+      postalCode
+      residenceNumber
+      state
+      street
+    }
+  }
+}
+`;
+
+const CHECKOUT_MUTATION = gql`
+mutation Checkout($addressId: Int!, 
+                  $cardBrand: String!, 
+                  $cardCsc: String!, 
+                  $cardExpiration: String!, 
+                  $cardHolderName: String!, 
+                  $cardNumber: String!) {
+  checkoutBasket(
+    addressId: $addressId, 
+    creditCardData: {
+      cardBrand: $cardBrand
+      cardCsc: $cardCsc
+      cardExpiration: $cardExpiration
+      cardHolderName: $cardHolderName
+      cardNumber: $cardNumber
+  }) {
+    status
+  }
+}
+`;
+
+const $ = window.$;
 class Checkout extends Component {
+
+  state = {
+    selectedAddress: null,
+    selectedPaymentMethod: null,
+    cardCsc: null
+  }
+
+  selectAddress(id) {
+    this.setState({ ...this.state, selectedAddress: id });
+  }
+
+  isAddressSelected(address) {
+    return this.state.selectedAddress === address.id;
+  }
+
+  isPaymentMethodSelected(paymentInfo) {
+    return this.state.selectedPaymentMethod === paymentInfo.id;
+  }
+
+  selectPaymentInfo(id) {
+    this.setState({ ...this.state, selectedPaymentMethod: id });
+  }
+
+  isOrderPossible() {
+    return this.state.selectedPaymentMethod != null &&
+      this.state.selectedAddress != null &&
+      this.state.cardCsc && this.state.cardCsc.match(/\d{3}/);
+  }
+
+  checkout(mutation, paymentInfoEntries) {
+    mutation({
+      variables: {
+        ...paymentInfoEntries.find(entry => entry.id === this.state.selectedPaymentMethod),
+        cardCsc: this.state.cardCsc,
+        addressId: this.state.selectedAddress,
+      }
+    });
+
+    $('#confirmationOrder').modal('show');
+  }
 
   render() {
     return (
-      <Mutation mutation={CREATE_ACCOUNT_MUTATION}>
-        {register => (
-          <div className="row">
-            <div className="col-md-4 order-md-2 mb-4">
-              <h4 className="d-flex justify-content-between align-items-center mb-3">
-                <span className="text-muted">Your cart</span>
-                <span className="badge badge-secondary badge-pill">3</span>
-              </h4>
-              <ul className="list-group mb-3">
-                <li className="list-group-item d-flex justify-content-between lh-condensed">
-                  <div>
-                    <h6 className="my-0">Product name</h6>
-                    <small className="text-muted">Brief description</small>
-                  </div>
-                  <span className="text-muted">$12</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between lh-condensed">
-                  <div>
-                    <h6 className="my-0">Second product</h6>
-                    <small className="text-muted">Brief description</small>
-                  </div>
-                  <span className="text-muted">$8</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between lh-condensed">
-                  <div>
-                    <h6 className="my-0">Third item</h6>
-                    <small className="text-muted">Brief description</small>
-                  </div>
-                  <span className="text-muted">$5</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between bg-light">
-                  <div className="text-success">
-                    <h6 className="my-0">Promo code</h6>
-                    <small>EXAMPLECODE</small>
-                  </div>
-                  <span className="text-success">-$5</span>
-                </li>
-                <li className="list-group-item d-flex justify-content-between">
-                  <span>Total (USD)</span>
-                  <strong>$20</strong>
-                </li>
-              </ul>
+      <Query query={SHOPPING_BASKET}>
+        {({ loading, error, data: { basket } }) => {
 
-              <form className="card p-2">
-                <div className="input-group">
-                  <input type="text" className="form-control" placeholder="Promo code" />
-                  <div className="input-group-append">
-                    <button type="submit" className="btn btn-secondary">Redeem</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="col-md-8 order-md-1">
-              <h4 className="mb-3">Billing address</h4>
-              <form className="needs-validation" novalidate>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="firstName">First name</label>
-                    <input type="text" className="form-control" id="firstName" placeholder="" value="" required />
-                    <div className="invalid-feedback">
-                      Valid first name is required.
-                </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="lastName">Last name</label>
-                    <input type="text" className="form-control" id="lastName" placeholder="" value="" required />
-                    <div className="invalid-feedback">
-                      Valid last name is required.
-                </div>
-                  </div>
-                </div>
+          if (loading) return 'Loading...';
+          if (error) return 'Error...';
+          if (!basket.basketItens.length) this.props.history.push('/');
 
-                <div className="mb-3">
-                  <label htmlFor="username">Username</label>
-                  <div className="input-group">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">@</span>
-                    </div>
-                    <input type="text" className="form-control" id="username" placeholder="Username" required />
-                    <div className="invalid-feedback" style={{ width: '100%' }}>
-                      Your username is required.
-                </div>
-                  </div>
-                </div>
+          return (
+            <Query query={ACCOUNT_QUERY} client={authClient} >
+              {({ loading, error, data: { me } }) => {
 
-                <div className="mb-3">
-                  <label htmlFor="email">Email <span className="text-muted">(Optional)</span></label>
-                  <input type="email" className="form-control" id="email" placeholder="you@example.com" />
-                  <div className="invalid-feedback">
-                    Please enter a valid email address for shipping updates.
-              </div>
-                </div>
+                if (loading) return 'Loading...';
+                if (error) return 'Error...';
 
-                <div className="mb-3">
-                  <label htmlFor="address">Address</label>
-                  <input type="text" className="form-control" id="address" placeholder="1234 Main St" required />
-                  <div className="invalid-feedback">
-                    Please enter your shipping address.
-              </div>
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="address2">Address 2 <span className="text-muted">(Optional)</span></label>
-                  <input type="text" className="form-control" id="address2" placeholder="Apartment or suite" />
-                </div>
-
-                <div className="row">
-                  <div className="col-md-5 mb-3">
-                    <label htmlFor="country">Country</label>
-                    <select className="custom-select d-block w-100" id="country" required>
-                      <option value="">Choose...</option>
-                      <option>United States</option>
-                    </select>
-                    <div className="invalid-feedback">
-                      Please select a valid country.
-                </div>
-                  </div>
-                  <div className="col-md-4 mb-3">
-                    <label htmlFor="state">State</label>
-                    <select className="custom-select d-block w-100" id="state" required>
-                      <option value="">Choose...</option>
-                      <option>California</option>
-                    </select>
-                    <div className="invalid-feedback">
-                      Please provide a valid state.
-                </div>
-                  </div>
-                  <div className="col-md-3 mb-3">
-                    <label htmlFor="zip">Zip</label>
-                    <input type="text" className="form-control" id="zip" placeholder="" required />
-                    <div className="invalid-feedback">
-                      Zip code required.
-                </div>
-                  </div>
-                </div>
-                <hr className="mb-4" />
-                <div className="custom-control custom-checkbox">
-                  <input type="checkbox" className="custom-control-input" id="same-address" />
-                  <label className="custom-control-label" htmlFor="same-address">Shipping address is the same as my billing address</label>
-                </div>
-                <div className="custom-control custom-checkbox">
-                  <input type="checkbox" className="custom-control-input" id="save-info" />
-                  <label className="custom-control-label" htmlFor="save-info">Save this information for next time</label>
-                </div>
-                <hr className="mb-4" />
-
-                <h4 className="mb-3">Payment</h4>
-
-                <div className="d-block my-3">
-                  <div className="custom-control custom-radio">
-                    <input id="credit" name="paymentMethod" type="radio" className="custom-control-input" checked required />
-                    <label className="custom-control-label" htmlFor="credit">Credit card</label>
-                  </div>
-                  <div className="custom-control custom-radio">
-                    <input id="debit" name="paymentMethod" type="radio" className="custom-control-input" required />
-                    <label className="custom-control-label" htmlFor="debit">Debit card</label>
-                  </div>
-                  <div className="custom-control custom-radio">
-                    <input id="paypal" name="paymentMethod" type="radio" className="custom-control-input" required />
-                    <label className="custom-control-label" htmlFor="paypal">Paypal</label>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="cc-name">Name on card</label>
-                    <input type="text" className="form-control" id="cc-name" placeholder="" required />
-                    <small className="text-muted">Full name as displayed on card</small>
-                    <div className="invalid-feedback">
-                      Name on card is required
-                </div>
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="cc-number">Credit card number</label>
-                    <input type="text" className="form-control" id="cc-number" placeholder="" required />
-                    <div className="invalid-feedback">
-                      Credit card number is required
-                </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-3 mb-3">
-                    <label htmlFor="cc-expiration">Expiration</label>
-                    <input type="text" className="form-control" id="cc-expiration" placeholder="" required />
-                    <div className="invalid-feedback">
-                      Expiration date required
-                </div>
-                  </div>
-                  <div className="col-md-3 mb-3">
-                    <label htmlFor="cc-expiration">CVV</label>
-                    <input type="text" className="form-control" id="cc-cvv" placeholder="" required />
-                    <div className="invalid-feedback">
-                      Security code required
-                </div>
-                  </div>
-                </div>
-                <hr className="mb-4" />
-                <button className="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
-              </form>
-            </div>
-          </div>
-        )}
-      </Mutation>
-    )
+                return (
+                  <Mutation mutation={CHECKOUT_MUTATION}>
+                    {checkout => {
+                      return (
+                        <div className="row">
+                          <ProductOverview basketItens={basket.basketItens} />
+                          <div className="col-md-8 order-md-1">
+                            <h4 className="mb-3">Billing address</h4>
+                            {
+                              me.shippingAddresses.length ?
+                                <small>Click to select</small> :
+                                <Link to="/account">Click here to register a shipping address</Link>
+                            }
+                            <div className="card-deck">
+                              {me.shippingAddresses.map(address => (
+                                <div
+                                  onClick={this.selectAddress.bind(this, address.id)}
+                                  key={address.id}
+                                  className="card"
+                                  style={{ cursor: 'pointer' }}
+                                >
+                                  <div className={`card-header ${this.isAddressSelected(address) ? "bg-primary text-white" : ""}`}>
+                                    {this.isAddressSelected(address) ? "Ship to this address" : " "}
+                                  </div>
+                                  <div className="card-body">
+                                    <p className="card-text">{address.street}, {address.residenceNumber} - {address.district}</p>
+                                    <p className="card-text">{address.city} - {address.state} - {address.postalCode}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <hr />
+                            <h4 className="mb-3">Payment method</h4>
+                            {
+                              me.paymentInfoEntries.length ?
+                                <small>Click to select</small> :
+                                <Link to="/account">Click here to register a payment method</Link>
+                            }
+                            <div className="card-deck">
+                              {me.paymentInfoEntries.map(paymentInfo => (
+                                <div
+                                  onClick={this.selectPaymentInfo.bind(this, paymentInfo.id)}
+                                  key={paymentInfo.id}
+                                  className="card"
+                                  style={{ cursor: 'pointer' }}
+                                >
+                                  <div className={`card-header ${this.isPaymentMethodSelected(paymentInfo) ? "bg-primary text-white" : ""}`}>
+                                    {this.isPaymentMethodSelected(paymentInfo) ? "Pay with this card" : " "}
+                                  </div>
+                                  <div className="card-body">
+                                    <p className="card-text">{paymentInfo.cardHolderName}</p>
+                                    <p className="card-text">{formatCCValue(paymentInfo.cardNumber)}</p>
+                                    {this.isPaymentMethodSelected(paymentInfo) ?
+                                      <input onChange={(e) => this.setState({ ...this.state, cardCsc: e.target.value })} type="password" className="form-control" id="cardCsc" pattern="\d{3}" placeholder="" defaultValue="" required /> :
+                                      null
+                                    }
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <button
+                              className="btn btn-primary btn-lg btn-block mt-4"
+                              type="button"
+                              onClick={this.checkout.bind(this, checkout, me.paymentInfoEntries)}
+                              disabled={!this.isOrderPossible()}
+                            >
+                              Place order
+                            </button>
+                          </div>
+                          <div className="modal" id="confirmationOrder" tabIndex="-1" role="dialog">
+                            <div className="modal-dialog" role="document">
+                              <div className="modal-content">
+                                <div className="modal-body">
+                                  <h4>Your order was received and will be processed shortly.</h4>
+                                </div>
+                                <div className="modal-footer">
+                                  <button type="button" className="btn btn-primary" onClick={() => this.props.history.push('/orders')} data-dismiss="modal">View order progress</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </Mutation>
+                );
+              }}
+            </Query>
+          )
+        }}
+      </Query>
+    );
   }
 }
 
