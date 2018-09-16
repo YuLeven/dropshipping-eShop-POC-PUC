@@ -11,13 +11,16 @@ const Addresses = ({ accountQuery, shippingAddresses, addAddress, removeAddress 
         <ul className="list-group list-group-flush">
           {shippingAddresses.map(address => (
             <div key={address.id}>
-              <AddressDetail address={address} />
               <li
                 className="list-group-item"
-                style={{ cursor: 'pointer' }}
-                onClick={() => $('#addressModal-' + address.id).modal('show')}
               >
-                {address.street}, {address.residenceNumber} - {address.city}
+                <span
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => $('#addressModal-' + address.id).modal('show')}
+                >
+                  {address.street}, {address.residenceNumber} - {address.city}
+                </span>
+
                 <span className="float-right">
                   <i
                     className="material-icons"
@@ -33,6 +36,7 @@ const Addresses = ({ accountQuery, shippingAddresses, addAddress, removeAddress 
                   </i>
                 </span>
               </li>
+              <AddressDetail address={address} />
             </div>
           ))}
         </ul>

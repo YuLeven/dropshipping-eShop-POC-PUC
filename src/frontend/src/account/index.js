@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 import authClient from '../clients/auth-client';
 import Addresses from './addresses';
+import PaymentMethods from './payment-methods';
 
 const ACCOUNT_QUERY = gql`
 {
@@ -12,6 +13,8 @@ const ACCOUNT_QUERY = gql`
     surname
     paymentInfoEntries {
       id
+      cardBrand
+      cardExpiration
       cardHolderName
       cardNumber
     }
@@ -53,22 +56,26 @@ mutation RemoveShippingAddress($id: Int!){
 }
 `;
 
-const PaymentInfos = ({ paymentInfoEntries }) => (
-  <div className="col-md-6">
-    <div className="card">
-      <div className="card-header">Payment methods</div>
-      <div className="card-body">
-        <ul className="list-group list-group-flush">
-          {paymentInfoEntries.map(paymentInfo => (
-            <li className="list-group-item">{paymentInfo.cardHolderName}</li>
-          ))}
-        </ul>
-        <a className="btn btn-primary mt-2">Add payment method</a>
-      </div>
-    </div>
-  </div>
-);
+const ADD_PAYMENT_METHOD_MUTATION = gql`
+mutation AddPayment($cardBrand: String!, $cardExpiration: String!, $cardHolderName: String!, $cardNumber: String!) {
+  addPaymentInfo(paymentInfo: {
+    cardBrand: $cardBrand
+    cardExpiration: $cardExpiration
+    cardHolderName: $cardHolderName
+    cardNumber: $cardNumber
+  }) {
+    id
+  }
+}
+`;
 
+const REMOVE_PAYMENT_METHOD_MUTATION = gql`
+mutation RemovePayment($id: Int!) {
+  removePaymentInfo(paymentInfoId: $id) {
+    id
+  }
+}
+`;
 
 class Account extends Component {
   render() {
@@ -79,30 +86,47 @@ class Account extends Component {
             <Mutation mutation={REMOVE_SHIPPING_ADDRESS_MUTATION} client={authClient}>
               {removeAddress => {
                 return (
-                  <Query query={ACCOUNT_QUERY} client={authClient}>
-                    {({ loading, error, data }) => {
-                      if (loading) return "Loading...";
-                      if (error) return "Error";
-
+                  <Mutation mutation={ADD_PAYMENT_METHOD_MUTATION} client={authClient}>
+                    {addPaymentMethod => {
                       return (
-                        <div>
-                          <h4>{data.me.name} {data.me.surname}</h4>
-                          <h5>{data.me.email}</h5>
-                          <hr />
-                          <div className="row">
-                            <Addresses
-                              accountQuery={ACCOUNT_QUERY}
-                              addAddress={addAddress}
-                              removeAddress={removeAddress}
-                              shippingAddresses={data.me.shippingAddresses}
-                            />
-                            <hr />
-                            <PaymentInfos paymentInfoEntries={data.me.paymentInfoEntries} />
-                          </div>
-                        </div>
+                        <Mutation mutation={REMOVE_PAYMENT_METHOD_MUTATION} client={authClient}>
+                          {removePaymentMethod => {
+                            return (
+                              <Query query={ACCOUNT_QUERY} client={authClient}>
+                                {({ loading, error, data }) => {
+                                  if (loading) return "Loading...";
+                                  if (error) return "Error";
+
+                                  return (
+                                    <div>
+                                      <h4>{data.me.name} {data.me.surname}</h4>
+                                      <h5>{data.me.email}</h5>
+                                      <hr />
+                                      <div className="row">
+                                        <Addresses
+                                          accountQuery={ACCOUNT_QUERY}
+                                          addAddress={addAddress}
+                                          removeAddress={removeAddress}
+                                          shippingAddresses={data.me.shippingAddresses}
+                                        />
+                                        <hr />
+                                        <PaymentMethods
+                                          accountQuery={ACCOUNT_QUERY}
+                                          paymentMethods={data.me.paymentInfoEntries}
+                                          addPaymentMethod={addPaymentMethod}
+                                          removePaymentMethod={removePaymentMethod}
+                                        />
+                                      </div>
+                                    </div>
+                                  )
+                                }}
+                              </Query>
+                            )
+                          }}
+                        </Mutation>
                       )
                     }}
-                  </Query>
+                  </Mutation>
                 )
               }}
             </Mutation>
