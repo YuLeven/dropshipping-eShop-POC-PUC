@@ -9,6 +9,10 @@ volumes:
     driver: local
   integration.data:
     driver: local
+  node_modules:
+    driver: local
+  elixir.deps:
+    driver: local
 
 services:
   sales.data:
@@ -78,6 +82,7 @@ services:
       - 4000:4000
     volumes:
       - ./src/backend:/app
+      - elixir.deps:/app/deps
     depends_on:
       - auth.data
 
@@ -92,6 +97,7 @@ services:
       - 4001:4000
     volumes:
       - ./src/backend:/app
+      - elixir.deps:/app/deps
     depends_on:
       - rabbitmq
       - sales.data
@@ -110,6 +116,7 @@ services:
       - 4002:4000
     volumes:
       - ./src/backend:/app
+      - elixir.deps:/app/deps
     depends_on:
       - rabbitmq
       - integration.data
@@ -121,7 +128,7 @@ services:
     command: npm start
     volumes:
       - ./src/frontend/:/usr/app
-      - /usr/app/node_modules
+      - node_modules:/usr/app/node_modules
     ports:
       - "3000:3000"
 
@@ -131,6 +138,7 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./src/backend:/app
+      - elixir.deps:/app/deps
     depends_on:
       - sales.data
       - products.data
