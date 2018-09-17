@@ -13,10 +13,12 @@ namespace Server
     {
       return new SellItemResponse
       {
-        ProductName = "Some Product",
+        RequestStatus = "Accepted",
+        ProductName = $"Some Product (x{input.Quantity})",
         DeliveryETAInDays = 12,
-        Price = 10.99f,
-        PurchaseDate = DateTime.Now
+        Price = 10.99f * input.Quantity,
+        PurchaseDate = DateTime.Now,
+        DeliveryAddress = input.DeliveryAddress
       };
     }
   }

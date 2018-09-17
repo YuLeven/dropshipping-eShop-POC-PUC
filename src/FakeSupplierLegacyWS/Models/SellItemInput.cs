@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Models;
 
 namespace Models
 {
@@ -15,15 +16,5 @@ namespace Models
 
     [DataMember]
     public DeliveryAddress DeliveryAddress { get; set; }
-  }
-
-  [DataContract]
-  public class DeliveryAddress
-  {
-    [DataMember]
-    public string Street { get; set; }
-
-    [DataMember]
-    public int ResidenceNumber { get; set; }
   }
 }
