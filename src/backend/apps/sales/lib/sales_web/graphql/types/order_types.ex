@@ -10,6 +10,7 @@ defmodule SalesWeb.GraphQL.Schema.OrderTypes do
     field(:invoice_total, :float)
     field(:supplier_status, :string)
     field(:basket, :basket)
+    field(:inserted_at, :string)
   end
 
   object :order_queries do
