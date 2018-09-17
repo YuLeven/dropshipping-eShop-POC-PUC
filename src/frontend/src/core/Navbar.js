@@ -41,6 +41,7 @@ class LoginButton extends Component {
 
                 <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                   <Link to="/account" className="dropdown-item">Account</Link>
+                  <Link to="/orders" className="dropdown-item">Orders</Link>
                   <a className="dropdown-item" onClick={this.logout}>Logout</a>
                 </div>
               </div>

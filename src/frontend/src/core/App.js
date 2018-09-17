@@ -9,6 +9,7 @@ import Login from '../login';
 import Register from '../register';
 import Checkout from '../checkout';
 import Account from '../account';
+import Orders from '../orders';
 
 class App extends Component {
   render() {
@@ -23,6 +24,7 @@ class App extends Component {
               <Route path="/sign-up" component={Register} />
               <Route path="/checkout" component={Checkout} />
               <Route path="/account" component={Account} />
+              <Route path="/orders" component={Orders} />
             </div>
           </div>
         </Router>
