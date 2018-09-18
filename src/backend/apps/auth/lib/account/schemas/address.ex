@@ -2,6 +2,8 @@ defmodule Auth.Accounts.Address do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Poison.Encoder,
+           only: [:street, :residence_number, :complement, :district, :city, :state, :postal_code]}
   schema "addresses" do
     field(:street, :string)
     field(:residence_number, :integer)

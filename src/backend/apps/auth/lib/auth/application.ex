@@ -12,6 +12,7 @@ defmodule Auth.Application do
       supervisor(Auth.Repo, []),
       # Start the endpoint when the application starts
       supervisor(AuthWeb.Endpoint, []),
+      worker(Auth.RpcServer, [])
       # Start your own worker by calling: Auth.Worker.start_link(arg1, arg2, arg3)
       # worker(Auth.Worker, [arg1, arg2, arg3]),
     ]

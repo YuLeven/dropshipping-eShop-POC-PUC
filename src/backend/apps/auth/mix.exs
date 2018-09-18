@@ -47,7 +47,9 @@ defmodule Auth.Mixfile do
       {:json_web_token, "~> 0.2.5"},
       {:faker, "~> 0.10"},
       {:absinthe_plug, "~> 1.4"},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:rabbitmq_client, in_umbrella: true},
+      {:amqp, "~> 0.3.1"}
     ]
   end
 

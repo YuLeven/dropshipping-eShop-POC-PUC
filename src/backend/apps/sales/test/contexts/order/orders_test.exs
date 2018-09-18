@@ -7,7 +7,7 @@ defmodule Sales.OrdersTest do
 
   describe "place_order/1" do
     test "persists and enqueues order" do
-      with_mock Sales.Rabbitmq, post_message: fn _queue, _payload -> "enqueued" end do
+      with_mock RabbitmqClient, post_message: fn _queue, _payload -> "enqueued" end do
         basket = Baskets.cast_basket!(user_id: 1)
 
         valid_order = %Order{
@@ -24,7 +24,9 @@ defmodule Sales.OrdersTest do
         assert %{supplier_status: "enqueued"} = first_order
 
         assert_called(
-          Sales.Rabbitmq.post_message("order_placements", Poison.encode!(first_order))
+          RabbitmqClient.post_message("order_placements", Poison.encode!(first_order),
+            persistent: true
+          )
         )
       end
     end

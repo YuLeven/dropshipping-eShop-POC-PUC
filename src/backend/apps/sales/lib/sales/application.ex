@@ -13,7 +13,8 @@ defmodule Sales.Application do
       supervisor(Sales.ProductRepo, []),
       # Start the endpoint when the application starts
       supervisor(SalesWeb.Endpoint, []),
-      worker(Sales.ProductsFakeDataProvider, [], restart: :temporary)
+      worker(Sales.ProductsFakeDataProvider, [], restart: :temporary),
+      worker(Sales.OrdersWorker, [])
       # Start your own worker by calling: Sales.Worker.start_link(arg1, arg2, arg3)
       # worker(Sales.Worker, [arg1, arg2, arg3]),
     ]

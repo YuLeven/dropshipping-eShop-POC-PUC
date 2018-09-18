@@ -3,6 +3,8 @@ defmodule Auth.Accounts.User do
   import Ecto.Changeset
   alias Auth.Accounts.{Address, PaymentInfo}
 
+  @derive {Poison.Encoder,
+           only: [:email, :name, :surname, :shipping_addresses, :payment_info_entries]}
   schema "users" do
     field(:email, :string)
     field(:name, :string)

@@ -44,12 +44,13 @@ defmodule Sales.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:faker, "~> 0.10"},
-      {:amqp, "~> 0.3.1"},
       {:poison, "~> 3.0"},
       {:mock, "~> 0.3.0", only: :test},
       {:absinthe_plug, "~> 1.4"},
       {:json_web_token, "~> 0.2.5"},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:rabbitmq_client, in_umbrella: true},
+      {:amqp, "~> 0.3.1"}
     ]
   end
 

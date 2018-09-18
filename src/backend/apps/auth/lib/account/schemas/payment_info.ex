@@ -2,6 +2,7 @@ defmodule Auth.Accounts.PaymentInfo do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Poison.Encoder, only: [:card_number, :card_holder_name, :card_expiration, :card_brand]}
   schema "payment_infos" do
     field(:card_number, :string)
     field(:card_holder_name, :string)

@@ -44,8 +44,9 @@ defmodule Integration.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:poison, "~> 3.0"},
-      {:amqp, "~> 0.3.1"},
-      {:httpoison, "~> 1.0"}
+      {:httpoison, "~> 1.0"},
+      {:rabbitmq_client, in_umbrella: true},
+      {:amqp, "~> 0.3.1"}
     ]
   end
 

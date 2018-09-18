@@ -29,11 +29,28 @@ defmodule Auth.Accounts do
     end
   end
 
+  def get(id) do
+    from(
+      u in User,
+      where: u.id == ^id,
+      preload: [:shipping_addresses, :payment_info_entries]
+    )
+    |> Repo.one()
+  end
+
   def get_account(email) do
     from(
       u in User,
       where: u.email == ^email,
       preload: [:shipping_addresses, :payment_info_entries]
+    )
+    |> Repo.one()
+  end
+
+  def get_shipping_address(address_id) do
+    from(
+      a in Address,
+      where: a.id == ^address_id
     )
     |> Repo.one()
   end

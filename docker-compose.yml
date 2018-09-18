@@ -121,6 +121,7 @@ services:
       - rabbitmq
       - integration.data
       - mule
+      - auth
 
   client:
     build:
