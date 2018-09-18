@@ -28,3 +28,5 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env()}.exs"
+
+config :rabbitmq_client, :rabbitmq, connection_url: {:system, "RABBITMQ_CONNECTION_STRING"}

@@ -201,7 +201,7 @@ class Checkout extends Component {
                                   <h4>Your order was received and will be processed shortly.</h4>
                                 </div>
                                 <div className="modal-footer">
-                                  <button type="button" className="btn btn-primary" onClick={() => this.props.history.push('/orders')} data-dismiss="modal">View order progress</button>
+                                  <button type="button" className="btn btn-primary" onClick={() => window.location.href = '/orders'} data-dismiss="modal">View order progress</button>
                                 </div>
                               </div>
                             </div>

@@ -78,6 +78,7 @@ services:
     command: ./entrypoint.sh
     environment:
       - APP_DIR=apps/auth
+      - RABBITMQ_CONNECTION_STRING=amqp://guest:guest@rabbitmq
     ports:
       - 4000:4000
     volumes:
@@ -93,6 +94,7 @@ services:
     command: ./entrypoint.sh
     environment:
       - APP_DIR=apps/sales
+      - RABBITMQ_CONNECTION_STRING=amqp://guest:guest@rabbitmq
     ports:
       - 4001:4000
     volumes:
@@ -112,6 +114,7 @@ services:
     command: ./entrypoint.sh
     environment:
       - APP_DIR=apps/integration
+      - RABBITMQ_CONNECTION_STRING=amqp://guest:guest@rabbitmq
     ports:
       - 4002:4000
     volumes:

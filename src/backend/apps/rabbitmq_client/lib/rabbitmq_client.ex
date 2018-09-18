@@ -1,5 +1,4 @@
 defmodule RabbitmqClient do
-  @rabbit_conn_string "amqp://guest:guest@rabbitmq"
   @maximum_attemps 10
   require Logger
 
@@ -7,7 +6,9 @@ defmodule RabbitmqClient do
     do: {:error, "Failed to establish connection after #{@maximum_attemps} tries."}
 
   def establish_connection!(attempts \\ 0) do
-    AMQP.Connection.open(@rabbit_conn_string)
+    conn_string = fetch_connection_string()
+
+    AMQP.Connection.open(conn_string)
     |> case do
       {:ok, connection} ->
         connection
@@ -53,4 +54,12 @@ defmodule RabbitmqClient do
     AMQP.Basic.publish(channel, exchange, queue, message, opts)
     channel
   end
+
+  defp fetch_connection_string do
+    Application.get_env(:rabbitmq_client, :rabbitmq)[:connection_url]
+    |> fetch_connection_string
+  end
+
+  defp fetch_connection_string({:system, env_var}), do: System.get_env(env_var)
+  defp fetch_connection_string(literal), do: literal
 end

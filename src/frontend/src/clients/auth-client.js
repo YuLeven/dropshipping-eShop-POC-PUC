@@ -1,16 +1,16 @@
-import ApolloClient from 'apollo-boost';
+import ApolloClient from "apollo-boost";
 
 const headers = () => {
-  const token = localStorage.getItem('token');
-  return token ? { authorization: `Bearer ${token}` } : {}
-}
+  const token = localStorage.getItem("token");
+  return token ? { authorization: `Bearer ${token}` } : {};
+};
 
 const authClient = new ApolloClient({
-  uri: 'http://localhost:4000/api',
+  uri: process.env.REACT_APP_AUTH_URL,
   fetchOptions: {
-    credentials: 'include'
+    credentials: "include"
   },
-  request: async (operation) => {
+  request: async operation => {
     operation.setContext({
       headers: headers()
     });
