@@ -35,7 +35,6 @@ defmodule Auth.Accounts.Address do
     |> validate_required([
       :street,
       :residence_number,
-      :complement,
       :district,
       :city,
       :state,
