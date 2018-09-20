@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: integration
+  name: integration
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: integration
+    spec:
+      containers:
+      - args:
+        - ./entrypoint.sh
+        env:
+        - name: APP_DIR
+          value: apps/integration
+        - name: RABBITMQ_CONNECTION_STRING
+          value: amqp://guest:guest@rabbitmq
+        image: integration
+        name: integration
+        ports:
+        - containerPort: 4000
+        resources: {}
+        volumeMounts:
+        - mountPath: /app
+          name: integration-claim0
+      restartPolicy: Always
+      volumes:
+      - name: integration-claim0
+        persistentVolumeClaim:
+          claimName: integration-claim0
+status: {}

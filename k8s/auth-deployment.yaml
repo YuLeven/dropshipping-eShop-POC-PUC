@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: auth
+  name: auth
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: auth
+    spec:
+      containers:
+      - args:
+        - ./entrypoint.sh
+        env:
+        - name: APP_DIR
+          value: apps/auth
+        - name: RABBITMQ_CONNECTION_STRING
+          value: amqp://guest:guest@rabbitmq
+        image: auth
+        name: auth
+        ports:
+        - containerPort: 4000
+        resources: {}
+        volumeMounts:
+        - mountPath: /app
+          name: auth-claim0
+      restartPolicy: Always
+      volumes:
+      - name: auth-claim0
+        persistentVolumeClaim:
+          claimName: auth-claim0
+status: {}
