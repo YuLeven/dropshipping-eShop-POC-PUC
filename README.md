@@ -1,4 +1,4 @@
-# DropshippingEshop
+# Dropshipping e-Shop
 
 Simple proof-of-concept application based on three use cases for a dropshipping-based e-Shop: Registration, authentication and product purchase.
 
