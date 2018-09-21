@@ -90,7 +90,7 @@ class Register extends Component {
                       </div>
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="email">Email <span className="text-muted">(Optional)</span></label>
+                      <label htmlFor="email">Email</label>
                       <input ref={node => { email = node }} type="email" className="form-control" id="email" placeholder="you@example.com" required />
                       <div className="invalid-feedback">
                         Please enter a valid email address.
